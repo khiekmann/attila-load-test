@@ -28,6 +28,20 @@ public class ConverterTest
 	}
 
 	@Test
+	public void nanosToMillis() throws Exception
+	{
+		// arrange
+		long nanos = 1 * 1000 * 1000;
+		long expectedMillis = 1;
+
+		// act
+		long millis = Converter.nanosToMillis(1 * 1000 * 1000);
+
+		// assert
+		assertEquals(expectedMillis, millis);
+	}
+
+	@Test
 	public void couldALoadTestRunLongerThanAWeek() throws Exception
 	{
 		// arrang

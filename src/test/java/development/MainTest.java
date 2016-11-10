@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import all.*;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.*;
 
 
 /**
@@ -33,22 +32,22 @@ public class MainTest
 	public void setExpectedDurationAndCheckItsValueInResult() {
 		// arrange
 		UseCase useCase = new useCaseA();
-		long expectedDurationInMinutes = 10;
+		long expectedDurationInNanos = Converter.secondsToNanos(5);
 		DataForTestCase data = new DataForTestCase();
-		data.expectedDurationInMinutes = expectedDurationInMinutes;
+		data.expectedDurationInNanos = expectedDurationInNanos;
 		ATestCase useCaseA_10min = new ATestCase(useCase, data);
 
 		// act
 		useCaseA_10min.start();
 		Result result = useCaseA_10min.getResult();
-		long actualDurationInMinutes = result.expectedDurationInMinutes;
+		long actualExpectedDurationInNanos = result.expectedDurationInNanos;
 
 		// assert
-		assertEquals(expectedDurationInMinutes, actualDurationInMinutes);
+		assertEquals(expectedDurationInNanos, actualExpectedDurationInNanos);
 	}
 
 	@Test
-	public void actualDurationInNanosIfUseCaseWasNotRun() {
+	public void actualDurationInNanosIfUseCaseWasNotRunReturnsNull() {
 		// arrange
 		UseCase useCase = new useCaseA();
 		DataForTestCase data = new DataForTestCase();
@@ -57,11 +56,9 @@ public class MainTest
 
 		// act
 		Result result = useCaseA_10min.getResult();
-		long expectedActualDurationInNanos = 0;
-		long actualActualDurationInNanos = result.actualDurationInNanos;
 
 		// assert
-		assertEquals(expectedActualDurationInNanos, actualActualDurationInNanos);
+		assertNull(result);
 	}
 
 	@Test
@@ -69,15 +66,19 @@ public class MainTest
 		// arrange
 		UseCase useCase = new useCaseA();
 		DataForTestCase data = new DataForTestCase();
-		data.actualDurationInNanos = Converter.secondsToNanos(2);
+		data.expectedDurationInNanos = Converter.secondsToNanos(2);
 		ATestCase useCaseA_10min = new ATestCase(useCase, data);
+		long acceptedDeviation = Converter.secondsToNanos(1);
+		long max = data.expectedDurationInNanos + acceptedDeviation;
 
 		// act
+		useCaseA_10min.start();
 		Result result = useCaseA_10min.getResult();
-		long expectedActualDurationInNanos = 0;
+		long expectedActualDurationInNanos = Converter.secondsToNanos(2);
 		long actualActualDurationInNanos = result.actualDurationInNanos;
 
 		// assert
-		assertEquals(expectedActualDurationInNanos, actualActualDurationInNanos);
+		assertFalse("Run takes not long enough time.", expectedActualDurationInNanos > actualActualDurationInNanos);
+		assertTrue("Run takes too long (including deviation).",  max > actualActualDurationInNanos);
 	}
 }

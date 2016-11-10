@@ -7,6 +7,6 @@ package all;
  */
 public class DataForTestCase
 {
-	public long expectedDurationInMinutes;
+	public long expectedDurationInNanos;
 	public long actualDurationInNanos;
 }

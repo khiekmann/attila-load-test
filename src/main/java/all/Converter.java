@@ -13,4 +13,9 @@ public class Converter
 	public static long nanosToSeconds(long nanos) {
 		return nanos / 1000 / 1000 / 1000;
 	}
+
+	public static long nanosToMillis(long nanos)
+	{
+		return nanos / 1000 / 1000;
+	}
 }
