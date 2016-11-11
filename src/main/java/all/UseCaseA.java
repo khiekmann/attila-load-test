@@ -3,6 +3,6 @@ package all;
 /**
  * Created by HiekmaHe on 10.11.2016.
  */
-public class useCaseA extends UseCase
+public class UseCaseA extends UseCase
 {
 }

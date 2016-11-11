@@ -69,4 +69,18 @@ public class ConverterTest
 		assertTrue(couldALoadTestRunLongerThanAWeek);
 
 	}
+
+	@Test
+	public void millisToNanos()
+	{
+		// arrange
+		long expectedNanos = 500 * 1000 * 1000;
+		long millis = 500;
+
+		// act
+		long actualNanos = Converter.millisToNanos(millis);
+
+		// assert
+		assertEquals(expectedNanos, actualNanos);
+	}
 }

@@ -9,4 +9,6 @@ public class DataForTestCase
 {
 	public long expectedDurationInNanos;
 	public long actualDurationInNanos;
+	public long actualTimestampEndInMillis;
+	public long timestampStartInNanos;
 }
