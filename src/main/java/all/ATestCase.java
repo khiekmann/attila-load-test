@@ -27,6 +27,7 @@ public class ATestCase implements Runnable
 
 	public void run()
 	{
+
 		isRunning = true;
 		data.timestampStartInNanos = System.nanoTime();
 		while(isRunning) {

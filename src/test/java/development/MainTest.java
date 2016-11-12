@@ -40,14 +40,14 @@ public class MainTest
 	}
 
 	@Test
-	public void setExpectedDurationAndCheckItsValueInResult() {
+	public void runInitialHenceExpectNull() {
 		// arrange
 		long expectedDurationInNanos = data.expectedDurationInNanos;
 
 		// act
 		testCase.start();
+		Eris.threadSleep(1500);
 		Result result = testCase.getResult();
-		System.out.println(result == null);
 		long actualExpectedDurationInNanos = result.expectedDurationInNanos;
 
 		// assert
@@ -73,7 +73,6 @@ public class MainTest
 
 		// act
 		testCase.run(); // makes no multi-threading
-		System.out.println(testCase);
 		Result result = testCase.getResult();
 		long expectedLeastDurationOfRun = Converter.secondsToNanos(2);
 		long actualDurationOfRun = result.actualDurationInNanos;
@@ -106,7 +105,7 @@ public class MainTest
 		data.expectedDurationInNanos = expectedDurationInNanos;
 		long killAfterNanos = Converter.secondsToNanos(2);
 		long deviation = Converter.millisToNanos(500);
-		long expectedLeastDurationOfRun = killAfterNanos;
+		long expectedLeastDurationOfRun = killAfterNanos - deviation;
 		long expectedLongestDurationOfRun = killAfterNanos + deviation;
 
 		// act
@@ -117,7 +116,7 @@ public class MainTest
 		long actualDurationOfRun = result.actualDurationInNanos;
 
 		// assert
-		assertTrue("Took not long enough.\n" + testCase,  actualDurationOfRun > expectedLeastDurationOfRun);
+		assertTrue("Took not long enough.\n" + testCase + "\n" + expectedLeastDurationOfRun, actualDurationOfRun > expectedLeastDurationOfRun);
 		assertTrue("Took too long.\n" + testCase,  expectedLongestDurationOfRun > actualDurationOfRun);
 	}
 
@@ -192,5 +191,10 @@ public class MainTest
 	@Test
 	public void timeStampOwnUnit() {
 
+	}
+
+	@Test
+	public void handleSleepInterrupted() {
+		
 	}
 }
