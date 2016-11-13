@@ -21,7 +21,7 @@ public class MainTest
 
 	@Before
 	public void before() {
-		useCase = new UseCaseA();
+		useCase = new UseCase();
 		data = new DataForTestCase();
 		testCase = new ATestCase(useCase, data);
 	}
@@ -42,16 +42,14 @@ public class MainTest
 	@Test
 	public void runInitialHenceExpectNull() {
 		// arrange
-		long expectedDurationInNanos = data.expectedDurationInNanos;
 
 		// act
 		testCase.start();
 		Eris.threadSleep(1500);
 		Result result = testCase.getResult();
-		long actualExpectedDurationInNanos = result.expectedDurationInNanos;
 
 		// assert
-		assertEquals(expectedDurationInNanos, actualExpectedDurationInNanos);
+		assertEquals(data.expectedDurationInNanos, result.expectedDurationInNanos);
 	}
 
 	@Test
