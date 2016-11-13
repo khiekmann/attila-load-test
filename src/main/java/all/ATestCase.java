@@ -8,14 +8,13 @@ package all;
  */
 public class ATestCase implements Runnable
 {
-	private final DataForTestCase data;
-	private Result result;
+	private DataForTestCase data;
+	private DataForTestCase result;
 	private boolean isRunning;
 	private Thread thread;
 
 	public ATestCase(UseCase useCase, DataForTestCase inData)
 	{
-
 		data = inData;
 		thread = new Thread(this);
 	}
@@ -25,11 +24,13 @@ public class ATestCase implements Runnable
 		thread.start();
 	}
 
+	/**
+	 * no multi-threading
+	 */
 	public void run()
 	{
-
 		isRunning = true;
-		data.timestampStartInNanos = System.nanoTime();
+		data.timestampStart = Time.now();
 		while(isRunning) {
 			threadSleepForExpectedDurationInNanos();
 		}
@@ -38,62 +39,54 @@ public class ATestCase implements Runnable
 
 	private void threadSleepForExpectedDurationInNanos()
 	{
-		try
-		{
-			long start = System.nanoTime();
-			long end = System.nanoTime();
-			long delta = end - start;
-			while (delta <= data.expectedDurationInNanos) {
-				Thread.sleep(100);
-				delta = System.nanoTime() - start;
-			}
+		data.actualDuration = Time.now().substract(data.timestampStart);
+		while (data.actualDuration.lessThan(data.expectedDuration)) {
+			threadSleep(100);
+			data.timestampEnd = Time.now();
+			data.actualDuration = data.timestampEnd.substract(data.timestampStart);
+		}
+		isRunning = false;
+	}
+
+	private void threadSleep(long millis)
+	{
+		try {
+			Thread.sleep(millis);
 		}
 		catch (InterruptedException e)
 		{
 			System.err.println(e.getMessage());
 		}
-		finally {
-			doKeepRunning();
-		}
 	}
 
-	private void doKeepRunning()
+	private void calcResult()
 	{
-		long timestampEnd = System.nanoTime();
-		data.actualDurationInNanos = timestampEnd - data.timestampStartInNanos;
-		if (data.actualDurationInNanos > data.expectedDurationInNanos)
-		{
-			isRunning = false;
-		}
-	}
-
-	public Result getResult()
-	{
-		return result;
-	}
-
-	public void calcResult()
-	{
-		result = new Result();
-		result.expectedDurationInNanos = data.expectedDurationInNanos;
-		result.actualDurationInNanos = data.actualDurationInNanos;
+		data.actualDuration = data.timestampEnd.substract(data.timestampStart);
+		result = new DataForTestCase();
+		result.actualDuration = data.actualDuration;
+		result.expectedDuration = data.expectedDuration;
+		result.timestampStart = data.timestampStart;
+		result.timestampEnd = data.timestampEnd;
 	}
 
 	public void stop()
 	{
 		isRunning = false;
-		long timestampEnd = System.nanoTime();
-		data.actualDurationInNanos = timestampEnd - data.timestampStartInNanos;
-		data.actualTimestampEndInMillis = System.nanoTime();
+		if (data.timestampEnd.equals(Time.seconds(0))) {
+			data.timestampEnd = Time.now();
+		}
 		calcResult();
 	}
 
 	@Override
 	public String toString() {
 		String message = "ATestCase:\n";
-		message += "expected duration: " + data.expectedDurationInNanos + "\n";
-		message += "actual duration: " + data.actualDurationInNanos + "\n";
-		message += "delta: " + (data.expectedDurationInNanos - data.actualDurationInNanos);
-		return message;
+		message += data.toString();
+   	return message;
+	}
+
+	public DataForTestCase getResult()
+	{
+		return result;
 	}
 }

@@ -5,24 +5,26 @@ package all;
  *
  * SRP: Convert between different time multitudes
  */
-public class Converter
+public class TimeConverter
 {
-	public static long secondsToNanos(long seconds)
-	{
-		return seconds * 1000 * 1000 * 1000;
-	}
-
 	public static long nanosToSeconds(long nanos) {
-		return nanos / 1000 / 1000 / 1000;
+		double seconds = (double) nanos / 1000 / 1000 / 1000;
+		return (long) seconds;
 	}
 
 	public static long nanosToMillis(long nanos)
 	{
-		return nanos / 1000 / 1000;
+		double millis = (double) nanos / 1000 / 1000;
+		return (long) millis;
 	}
 
 	public static long millisToNanos(long millis)
 	{
 		return millis * 1000 * 1000;
+	}
+
+	public static long secondsToNanos(long seconds)
+	{
+		return seconds * 1000 * 1000 * 1000;
 	}
 }
