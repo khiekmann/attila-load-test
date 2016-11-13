@@ -2,7 +2,8 @@ package development;
 
 import org.junit.Test;
 
-import all.Converter;
+import all.Time;
+import all.TimeConverter;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by HiekmaHe on 10.11.2016.
  */
-public class ConverterTest
+public class TimeConverterTest
 {
 	@Test
 	public void secondsToNanos() throws Exception
@@ -21,7 +22,7 @@ public class ConverterTest
 		long nanos = 2 * 1000 * 1000 * 1000;
 
 		// act
-		long _nanos = Converter.secondsToNanos(_2seconds);
+		long _nanos = TimeConverter.secondsToNanos(_2seconds);
 
 		// assert
 		assertEquals(nanos, _nanos);
@@ -35,7 +36,7 @@ public class ConverterTest
 		long expectedMillis = 1;
 
 		// act
-		long millis = Converter.nanosToMillis(1 * 1000 * 1000);
+		long millis = TimeConverter.nanosToMillis(1 * 1000 * 1000);
 
 		// assert
 		assertEquals(expectedMillis, millis);
@@ -49,7 +50,7 @@ public class ConverterTest
 
 		// act
 		long expectedDurationInSeconds =  9223372036l;
-		long durationInSeconds = Converter.nanosToSeconds(maxNanos);
+		long durationInSeconds = TimeConverter.nanosToSeconds(maxNanos);
 		double expectedDurationInMinutes =  1.5372286726666668E8;
 		double durationInMinutes = (double) durationInSeconds / 60;
 		double expectedDurationHours =  2562047.787777778;
@@ -78,9 +79,24 @@ public class ConverterTest
 		long millis = 500;
 
 		// act
-		long actualNanos = Converter.millisToNanos(millis);
+		long actualNanos = TimeConverter.millisToNanos(millis);
 
 		// assert
 		assertEquals(expectedNanos, actualNanos);
+	}
+
+	@Test
+	public void nanoTime() {
+		// arrange
+		Time now1 = new Time(System.nanoTime());
+		Time now2 = Time.now();
+
+		// act
+		Time delta = now1.substract(now2);
+
+		// assert
+		System.out.println(now1);
+		System.out.println(now2);
+		System.out.println(delta);
 	}
 }

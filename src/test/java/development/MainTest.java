@@ -17,7 +17,6 @@ public class MainTest
 	private UseCase useCase;
 	private DataForTestCase data;
 	private ATestCase testCase;
-	private Result result;
 
 	@Before
 	public void before() {
@@ -27,29 +26,20 @@ public class MainTest
 	}
 
 	@Test
-	public void easySetup() {
-		// arrange
-
-		// act
-		testCase.start();
-		testCase.stop();
-		Result result = testCase.getResult();
-
-		// assert
-		assertNotNull(result);
-	}
-
-	@Test
 	public void runInitialHenceExpectNull() {
 		// arrange
+		Time runFor = Time.millis(1500);
 
 		// act
 		testCase.start();
-		Eris.threadSleep(1500);
-		Result result = testCase.getResult();
+		Eris.threadSleep(runFor);
+		testCase.stop();
+		long expected = runFor.toNanos();
+		long actual = testCase.getResult().actualDuration.toNanos();
+		long delta = expected - actual;
 
 		// assert
-		assertEquals(data.expectedDurationInNanos, result.expectedDurationInNanos);
+		assertTrue("Runs too long. " + expected + " ! > " + actual + " delta: " + delta, expected > actual);
 	}
 
 	@Test
@@ -57,7 +47,7 @@ public class MainTest
 		// arrange
 
 		// act
-		Result result = testCase.getResult();
+		DataForTestCase result = testCase.getResult();
 
 		// assert
 		assertNull(result);
@@ -66,133 +56,117 @@ public class MainTest
 	@Test
 	public void runUseCaseFor2Seconds_assertLowerBound() {
 		// arrange
-		data.expectedDurationInNanos = Converter.secondsToNanos(2);
-		long acceptedDeviation = Converter.secondsToNanos(1);
+		data.expectedDuration = Time.seconds(2);
 
 		// act
-		testCase.run(); // makes no multi-threading
-		Result result = testCase.getResult();
-		long expectedLeastDurationOfRun = Converter.secondsToNanos(2);
-		long actualDurationOfRun = result.actualDurationInNanos;
+		testCase.run();
+		DataForTestCase result = testCase.getResult();
+		Time expectedLeastDurationOfRun = Time.seconds(2);
+		Time actualDurationOfRun = result.actualDuration;
 
 		// assert
-		assertTrue("Took not long enough.\n" + testCase,  actualDurationOfRun > expectedLeastDurationOfRun);
+		assertTrue("Took not long enough." + testCase,  actualDurationOfRun.greaterThan(expectedLeastDurationOfRun));
 	}
 
 	@Test
 	public void runUseCaseFor2Seconds_assertUpperBound() {
 		// arrange
-		data.expectedDurationInNanos = Converter.secondsToNanos(2);
-		long acceptedDeviation = Converter.secondsToNanos(1);
+		data.expectedDuration = Time.seconds(2);
 
 		// act
 		testCase.run();
-		Result result = testCase.getResult();
-		long expectedLeastDurationOfRun = Converter.secondsToNanos(2);
-		long expectedLongestDurationOfRun = expectedLeastDurationOfRun + acceptedDeviation;
-		long actualDurationOfRun = result.actualDurationInNanos;
+		Time expectedLongestDurationOfRun = Time.seconds(2).add(Time.millis(500));
 
 		// assert
-		assertTrue("Took too long.\n" + testCase, expectedLongestDurationOfRun > actualDurationOfRun);
+		assertTrue("Took too long." + expectedLongestDurationOfRun + "!>" + testCase.getResult().actualDuration, expectedLongestDurationOfRun.greaterThan(testCase.getResult().actualDuration));
 	}
 
 	@Test
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertLowerBound() {
 		// arrange
-		long expectedDurationInNanos = Converter.secondsToNanos(5);
-		data.expectedDurationInNanos = expectedDurationInNanos;
-		long killAfterNanos = Converter.secondsToNanos(2);
-		long deviation = Converter.millisToNanos(500);
-		long expectedLeastDurationOfRun = killAfterNanos - deviation;
-		long expectedLongestDurationOfRun = killAfterNanos + deviation;
+		data.expectedDuration = Time.seconds(5);
+		Time killAfter = Time.seconds(2);
+		Time expectedLeastDurationOfRun = killAfter.substract(Time.millis(200));
 
 		// act
 		testCase.start();
-		Eris.threadSleep(Converter.nanosToMillis(killAfterNanos));
+		Eris.threadSleep(killAfter);
 		testCase.stop();
-		result = testCase.getResult();
-		long actualDurationOfRun = result.actualDurationInNanos;
+		DataForTestCase result = testCase.getResult();
+
+		Time actualDurationOfRun = result.actualDuration;
+		Time expectedLongestDurationOfRun = killAfter.add(Time.millis(500));
 
 		// assert
-		assertTrue("Took not long enough.\n" + testCase + "\n" + expectedLeastDurationOfRun, actualDurationOfRun > expectedLeastDurationOfRun);
-		assertTrue("Took too long.\n" + testCase,  expectedLongestDurationOfRun > actualDurationOfRun);
+		assertTrue("Took not long enough.", actualDurationOfRun.greaterThan(expectedLeastDurationOfRun));
+		assertTrue("Took too long.",  expectedLongestDurationOfRun.greaterThan(actualDurationOfRun));
 	}
 
 	@Test
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertUpperBound() {
 		// arrange
-		long expectedDurationInNanos = Converter.secondsToNanos(5);
-		data.expectedDurationInNanos = expectedDurationInNanos;
-		long acceptedDeviation = 500 * 1000 * 1000;
-		long killAfterNanos = Converter.secondsToNanos(2);
-		long expectedLongestDurationOfRun = Converter.secondsToNanos(2) + acceptedDeviation;
+		Time expectedDurationInNanos = Time.seconds(5);
+		data.expectedDuration = expectedDurationInNanos;
+		Time acceptedDeviation = Time.millis(500);
+		Time killAfterNanos = Time.seconds(2);
+		Time expectedLongestDurationOfRun = Time.seconds(2).add(acceptedDeviation);
 
 		// act
 		Thread aThread = new Thread(testCase);
 		aThread.start();
-		Eris.threadSleep(Converter.nanosToMillis(killAfterNanos));
+		Eris.threadSleep(killAfterNanos);
 		Eris.interrupt(aThread);
 		testCase.stop();
-		result = testCase.getResult();
-		long actualDurationOfRun = result.actualDurationInNanos;
+		DataForTestCase result = testCase.getResult();
+		Time actualDurationOfRun = result.actualDuration;
 
 		// assert
-		assertTrue("Took too long.", expectedLongestDurationOfRun > actualDurationOfRun);
+		assertTrue("Took too long.", expectedLongestDurationOfRun.greaterThan(actualDurationOfRun));
 	}
 
 	@Test
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCallAsThread() {
 		// arrange
-		long expectedLeastDurationOfRun = Converter.secondsToNanos(4);
-		data.expectedDurationInNanos = expectedLeastDurationOfRun;
-		long acceptedDeviation = Converter.secondsToNanos(1);
-		long expectedLongestDurationOfRun = data.expectedDurationInNanos + acceptedDeviation;
-		long killAfterNanos = Converter.secondsToNanos(2);
+		Time expectedLeastDurationOfRun = Time.seconds(4);
+		data.expectedDuration = expectedLeastDurationOfRun;
+		Time acceptedDeviation = Time.seconds(1);
+		Time expectedLongestDurationOfRun = data.expectedDuration.add(acceptedDeviation);
+		Time killAfterNanos = Time.seconds(2);
 
 		// act
 		Thread aThread = new Thread(testCase);
 		aThread.start();
-		Eris.threadSleep(Converter.nanosToMillis(killAfterNanos));
+		Eris.threadSleep(killAfterNanos);
 		Eris.interrupt(aThread);
 		testCase.stop();
-		result = testCase.getResult();
+		DataForTestCase result = testCase.getResult();
 		assertNotNull(testCase.getResult());
-		long actualDurationOfRun = result.actualDurationInNanos;
+		Time actualDurationOfRun = result.actualDuration;
 
 		// assert
-		assertTrue("Run takes not enough time.\n" + testCase, actualDurationOfRun > killAfterNanos - Converter.millisToNanos(100));
-		assertTrue("Run killed too early.\n" + testCase, expectedLeastDurationOfRun > actualDurationOfRun);
-		assertTrue("Run takes too long.\n" + testCase,   expectedLongestDurationOfRun > actualDurationOfRun);
+		assertTrue("Run takes not enough time." + testCase, actualDurationOfRun.greaterThan(killAfterNanos.substract(Time.millis(100))));
+		assertTrue("Run killed too early." + testCase, expectedLeastDurationOfRun.greaterThan(actualDurationOfRun));
+		assertTrue("Run takes too long." + testCase,   expectedLongestDurationOfRun.greaterThan(actualDurationOfRun));
 	}
 
 	@Test
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_TestCaseRunnableNow() {
 		// arrange
-		long expectedDurationInNanos = Converter.secondsToNanos(5);
-		data.expectedDurationInNanos = expectedDurationInNanos;
-		long acceptedDeviation = 500 * 1000 * 1000;
-		long killAfterNanos = Converter.secondsToNanos(2);
-		long expectedLongestDurationOfRun = Converter.secondsToNanos(2) + acceptedDeviation;
+		Time expectedDurationInNanos = Time.seconds(5);
+		data.expectedDuration = expectedDurationInNanos;
+		Time acceptedDeviation = Time.millis(500);
+		Time killAfterNanos = Time.seconds(2);
+		Time expectedLongestDurationOfRun = Time.seconds(2).add(acceptedDeviation);
 
 		// act
 		testCase.start();
-		Eris.threadSleep(Converter.nanosToMillis(killAfterNanos));
+		Eris.threadSleep(killAfterNanos);
 		testCase.stop();
-		result = testCase.getResult();
-		long actualDurationOfRun = result.actualDurationInNanos;
+		DataForTestCase result = testCase.getResult();
+		Time actualDurationOfRun = result.actualDuration;
 
 		// assert
-		assertTrue("Took too long.", expectedLongestDurationOfRun > actualDurationOfRun);
-	}
-
-	@Test
-	public void setupWiremock() {
-
-	}
-
-	@Test
-	public void timeStampOwnUnit() {
-
+		assertTrue("Took too long.", expectedLongestDurationOfRun.greaterThan(actualDurationOfRun));
 	}
 
 	@Test

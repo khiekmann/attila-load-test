@@ -5,7 +5,6 @@ package all;
  */
 public class Result
 {
-	public long expectedDurationInNanos;
-
-	public long actualDurationInNanos;
+	public Time expectedDuration;
+	public Time actualDuration;
 }

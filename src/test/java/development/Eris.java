@@ -1,5 +1,8 @@
 package development;
 
+import all.Time;
+
+
 /**
  * Created by HiekmaHe on 10.11.2016.
  *
@@ -14,6 +17,18 @@ public class Eris
 		try
 		{
 			Thread.sleep(millis);
+		}
+		catch (InterruptedException e)
+		{
+			System.err.println(e.getMessage());
+		}
+	}
+
+	public static void threadSleep(Time timeObject)
+	{
+		try
+		{
+			Thread.sleep(timeObject.toMillis());
 		}
 		catch (InterruptedException e)
 		{
