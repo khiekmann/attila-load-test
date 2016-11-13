@@ -187,6 +187,10 @@ public class MainTest
 		assertTrue("Took too long.", expectedLongestDurationOfRun > actualDurationOfRun);
 	}
 
+	@Test
+	public void setupWiremock() {
+
+	}
 
 	@Test
 	public void timeStampOwnUnit() {
@@ -195,6 +199,6 @@ public class MainTest
 
 	@Test
 	public void handleSleepInterrupted() {
-		
+
 	}
 }
