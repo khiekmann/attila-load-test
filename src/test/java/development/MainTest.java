@@ -4,6 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import all.*;
+import testcase.DataForTestCase;
+import testcase.TestCase;
+import testcase.TestCaseRunner;
+import time.Time;
 
 import static junit.framework.TestCase.*;
 
@@ -14,159 +18,150 @@ import static junit.framework.TestCase.*;
 public class MainTest
 {
 
-	private UseCase useCase;
 	private DataForTestCase data;
-	private ATestCase testCase;
+	private TestCase testCase;
+	private TestCaseRunner testCaseRunner;
 
 	@Before
 	public void before() {
-		useCase = new UseCase();
+		UseCase useCase = new UseCase();
 		data = new DataForTestCase();
-		testCase = new ATestCase(useCase, data);
+		data.expectedDuration = Time.seconds(10);
+		testCase = new TestCase(useCase, data);
+		testCaseRunner = new TestCaseRunner(testCase);
 	}
 
 	@Test
-	public void runInitialHenceExpectNull() {
+	public void runOutOfTheBox() throws Exception
+	{
 		// arrange
-		Time runFor = Time.millis(1500);
+		Time stopAfter = Time.millis(1500);
 
 		// act
-		testCase.start();
-		Eris.threadSleep(runFor);
-		testCase.stop();
-		long expected = runFor.toNanos();
-		long actual = testCase.getResult().actualDuration.toNanos();
-		long delta = expected - actual;
+		testCaseRunner.start();
+		stopAfter.sleep();
+		testCaseRunner.stop();
+
+		Time actual = testCaseRunner.duration();
+		Time delta = stopAfter.difference(actual);
 
 		// assert
-		assertTrue("Runs too long. " + expected + " ! > " + actual + " delta: " + delta, expected > actual);
+		assertTrue("Runs too long. " + stopAfter + " ! > " + actual + " delta: " + delta, stopAfter.greaterThan(actual));
 	}
 
 	@Test
-	public void actualDurationInNanosIfUseCaseWasNotRunReturnsNull() {
+	public void runOutOfTheBox_HandleResult_NotRun() {
 		// arrange
 
 		// act
 		DataForTestCase result = testCase.getResult();
+		String resultToString = "DataForTestCase\n"
+				+ "expectedDuration: 0\n"
+				+ "duration: 0\n"
+				+ "timestampEnd: 0\n"
+				+ "timestampStart: 0\n";
 
 		// assert
-		assertNull(result);
+		assertEquals(resultToString, result.toString());
 	}
 
 	@Test
-	public void runUseCaseFor2Seconds_assertLowerBound() {
+	public void runUseCaseFor2Seconds_assertLowerBound() throws Exception
+	{
+		// arrange
+		Time stopAfter = Time.seconds(2);
+
+		// act
+		testCaseRunner.start();
+		stopAfter.sleep();
+		testCaseRunner.stop();
+		Time duration = testCaseRunner.getDuration();
+
+		// assert
+		assertTrue("Took not long enough." + testCase,  duration.greaterThan(stopAfter));
+	}
+
+	@Test
+	public void runUseCaseFor2Seconds_assertUpperBound() throws Exception
+	{
 		// arrange
 		data.expectedDuration = Time.seconds(2);
 
 		// act
-		testCase.run();
-		DataForTestCase result = testCase.getResult();
-		Time expectedLeastDurationOfRun = Time.seconds(2);
-		Time actualDurationOfRun = result.actualDuration;
-
-		// assert
-		assertTrue("Took not long enough." + testCase,  actualDurationOfRun.greaterThan(expectedLeastDurationOfRun));
-	}
-
-	@Test
-	public void runUseCaseFor2Seconds_assertUpperBound() {
-		// arrange
-		data.expectedDuration = Time.seconds(2);
-
-		// act
-		testCase.run();
+		testCaseRunner.start();
 		Time expectedLongestDurationOfRun = Time.seconds(2).add(Time.millis(500));
 
 		// assert
-		assertTrue("Took too long." + expectedLongestDurationOfRun + "!>" + testCase.getResult().actualDuration, expectedLongestDurationOfRun.greaterThan(testCase.getResult().actualDuration));
+		assertTrue("Took too long." + expectedLongestDurationOfRun + "!>" + testCase.getDuration(), expectedLongestDurationOfRun.greaterThan(testCase.getDuration()));
 	}
 
 	@Test
-	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertLowerBound() {
+	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertLowerBound() throws Exception
+	{
+		// arrange
+		Time stopAfter = Time.seconds(2);
+
+		// act
+		Time timestampStart = Time.now();
+		testCaseRunner.start();
+		stopAfter.sleep();
+		testCaseRunner.stop();
+		Time duration = Time.now().difference(timestampStart);
+
+		// assert
+		assertTrue("Took not long enough." + duration + " " + stopAfter, duration.greaterThan(stopAfter));
+	}
+
+	@Test
+	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertUpperBound() throws Exception {
+		// arrange
+		Time stopAfter = Time.seconds(2);
+		Time maxDuration = stopAfter.add(Time.millis(500));
+
+		// act
+		testCaseRunner.start();
+		stopAfter.sleep();
+		testCaseRunner.stop();
+
+		// assert
+		assertTrue("Took too long.", maxDuration.greaterThan(testCaseRunner.duration()));
+	}
+
+	@Test
+	public void runUseCaseFor2SecondsBecauseOfExternalStopCallAsThread() throws Exception
+	{
+		// arrange
+		Time stopAfter = Time.seconds(2);
+		Time maxDuration = data.expectedDuration.add(Time.millis(500));
+
+		// act
+		Time timestampStart = Time.now();
+		testCaseRunner.start();
+		stopAfter.sleep();
+		testCaseRunner.stop();
+		Time duration = Time.now().difference(timestampStart);
+
+		// assert
+		assertTrue("Run to quick.." + testCase, duration.greaterThan(stopAfter));
+		assertTrue("Run takes too long." + testCase,   maxDuration.greaterThan(duration));
+	}
+
+	@Test
+	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_TestCaseRunnableNow() throws Exception
+	{
 		// arrange
 		data.expectedDuration = Time.seconds(5);
-		Time killAfter = Time.seconds(2);
-		Time expectedLeastDurationOfRun = killAfter.substract(Time.millis(200));
-
-		// act
-		testCase.start();
-		Eris.threadSleep(killAfter);
-		testCase.stop();
-		DataForTestCase result = testCase.getResult();
-
-		Time actualDurationOfRun = result.actualDuration;
-		Time expectedLongestDurationOfRun = killAfter.add(Time.millis(500));
-
-		// assert
-		assertTrue("Took not long enough.", actualDurationOfRun.greaterThan(expectedLeastDurationOfRun));
-		assertTrue("Took too long.",  expectedLongestDurationOfRun.greaterThan(actualDurationOfRun));
-	}
-
-	@Test
-	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertUpperBound() {
-		// arrange
-		Time expectedDurationInNanos = Time.seconds(5);
-		data.expectedDuration = expectedDurationInNanos;
 		Time acceptedDeviation = Time.millis(500);
-		Time killAfterNanos = Time.seconds(2);
+		Time stopAfter = Time.seconds(2);
 		Time expectedLongestDurationOfRun = Time.seconds(2).add(acceptedDeviation);
 
 		// act
-		Thread aThread = new Thread(testCase);
-		aThread.start();
-		Eris.threadSleep(killAfterNanos);
-		Eris.interrupt(aThread);
-		testCase.stop();
-		DataForTestCase result = testCase.getResult();
-		Time actualDurationOfRun = result.actualDuration;
+		testCaseRunner.start();
+		stopAfter.sleep();
+		testCaseRunner.stop();
 
 		// assert
-		assertTrue("Took too long.", expectedLongestDurationOfRun.greaterThan(actualDurationOfRun));
-	}
-
-	@Test
-	public void runUseCaseFor2SecondsBecauseOfExternalStopCallAsThread() {
-		// arrange
-		Time expectedLeastDurationOfRun = Time.seconds(4);
-		data.expectedDuration = expectedLeastDurationOfRun;
-		Time acceptedDeviation = Time.seconds(1);
-		Time expectedLongestDurationOfRun = data.expectedDuration.add(acceptedDeviation);
-		Time killAfterNanos = Time.seconds(2);
-
-		// act
-		Thread aThread = new Thread(testCase);
-		aThread.start();
-		Eris.threadSleep(killAfterNanos);
-		Eris.interrupt(aThread);
-		testCase.stop();
-		DataForTestCase result = testCase.getResult();
-		assertNotNull(testCase.getResult());
-		Time actualDurationOfRun = result.actualDuration;
-
-		// assert
-		assertTrue("Run takes not enough time." + testCase, actualDurationOfRun.greaterThan(killAfterNanos.substract(Time.millis(100))));
-		assertTrue("Run killed too early." + testCase, expectedLeastDurationOfRun.greaterThan(actualDurationOfRun));
-		assertTrue("Run takes too long." + testCase,   expectedLongestDurationOfRun.greaterThan(actualDurationOfRun));
-	}
-
-	@Test
-	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_TestCaseRunnableNow() {
-		// arrange
-		Time expectedDurationInNanos = Time.seconds(5);
-		data.expectedDuration = expectedDurationInNanos;
-		Time acceptedDeviation = Time.millis(500);
-		Time killAfterNanos = Time.seconds(2);
-		Time expectedLongestDurationOfRun = Time.seconds(2).add(acceptedDeviation);
-
-		// act
-		testCase.start();
-		Eris.threadSleep(killAfterNanos);
-		testCase.stop();
-		DataForTestCase result = testCase.getResult();
-		Time actualDurationOfRun = result.actualDuration;
-
-		// assert
-		assertTrue("Took too long.", expectedLongestDurationOfRun.greaterThan(actualDurationOfRun));
+		assertTrue("Took too long.", expectedLongestDurationOfRun.greaterThan(testCaseRunner.duration()));
 	}
 
 	@Test
