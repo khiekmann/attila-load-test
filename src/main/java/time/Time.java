@@ -121,4 +121,9 @@ public class Time implements Comparable<Time>
 	{
 		Thread.sleep(toMillis());
 	}
+
+	public static Time elapseSince(Time then)
+	{
+		return Time.now().difference(then);
+	}
 }

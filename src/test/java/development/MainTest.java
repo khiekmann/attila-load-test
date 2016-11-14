@@ -38,15 +38,14 @@ public class MainTest
 		Time stopAfter = Time.millis(1500);
 
 		// act
+		Time timestartStamp = Time.now();
 		testCaseRunner.start();
 		stopAfter.sleep();
 		testCaseRunner.stop();
-
-		Time actual = testCaseRunner.duration();
-		Time delta = stopAfter.difference(actual);
+		Time duration = Time.elapseSince(timestartStamp);
 
 		// assert
-		assertTrue("Runs too long. " + stopAfter + " ! > " + actual + " delta: " + delta, stopAfter.greaterThan(actual));
+		assertTrue("Runs too long. ", duration.greaterThan(stopAfter));
 	}
 
 	@Test
@@ -72,10 +71,11 @@ public class MainTest
 		Time stopAfter = Time.seconds(2);
 
 		// act
+		Time timestampStart = Time.now();
 		testCaseRunner.start();
 		stopAfter.sleep();
 		testCaseRunner.stop();
-		Time duration = testCaseRunner.getDuration();
+		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
 		assertTrue("Took not long enough." + testCase,  duration.greaterThan(stopAfter));
@@ -88,11 +88,13 @@ public class MainTest
 		data.expectedDuration = Time.seconds(2);
 
 		// act
+		Time timestampStart = Time.now();
 		testCaseRunner.start();
-		Time expectedLongestDurationOfRun = Time.seconds(2).add(Time.millis(500));
+		Time duration = Time.elapseSince(timestampStart);
+		Time maxDuration = Time.seconds(2).add(Time.millis(500));
 
 		// assert
-		assertTrue("Took too long." + expectedLongestDurationOfRun + "!>" + testCase.getDuration(), expectedLongestDurationOfRun.greaterThan(testCase.getDuration()));
+		assertTrue("Took too long.", maxDuration.greaterThan(duration));
 	}
 
 	@Test
@@ -106,7 +108,7 @@ public class MainTest
 		testCaseRunner.start();
 		stopAfter.sleep();
 		testCaseRunner.stop();
-		Time duration = Time.now().difference(timestampStart);
+		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
 		assertTrue("Took not long enough." + duration + " " + stopAfter, duration.greaterThan(stopAfter));
@@ -119,12 +121,14 @@ public class MainTest
 		Time maxDuration = stopAfter.add(Time.millis(500));
 
 		// act
+		Time timestampStart = Time.now();
 		testCaseRunner.start();
 		stopAfter.sleep();
 		testCaseRunner.stop();
+		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
-		assertTrue("Took too long.", maxDuration.greaterThan(testCaseRunner.duration()));
+		assertTrue("Took too long.", maxDuration.greaterThan(duration));
 	}
 
 	@Test
@@ -139,7 +143,7 @@ public class MainTest
 		testCaseRunner.start();
 		stopAfter.sleep();
 		testCaseRunner.stop();
-		Time duration = Time.now().difference(timestampStart);
+		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
 		assertTrue("Run to quick.." + testCase, duration.greaterThan(stopAfter));
@@ -150,18 +154,18 @@ public class MainTest
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_TestCaseRunnableNow() throws Exception
 	{
 		// arrange
-		data.expectedDuration = Time.seconds(5);
-		Time acceptedDeviation = Time.millis(500);
 		Time stopAfter = Time.seconds(2);
-		Time expectedLongestDurationOfRun = Time.seconds(2).add(acceptedDeviation);
+		Time maxDuration = Time.seconds(2).add( Time.millis(500));
 
 		// act
+		Time timestampStart = Time.now();
 		testCaseRunner.start();
 		stopAfter.sleep();
 		testCaseRunner.stop();
+		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
-		assertTrue("Took too long.", expectedLongestDurationOfRun.greaterThan(testCaseRunner.duration()));
+		assertTrue("Took too long.", maxDuration.greaterThan(duration));
 	}
 
 	@Test

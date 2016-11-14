@@ -25,21 +25,16 @@ public class TestCase implements Runnable
 	public void run()
 	{
 		isRunning(true);
-		while(isRunning()) {
-			executeOneIterationOfTheTestCase();
-		}
+		while(isRunning())
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		stop();
-	}
-
-	private void executeOneIterationOfTheTestCase()
-	{
-		try {
-			Thread.sleep(100);
-		}
-		catch (InterruptedException e)
-		{
-			System.err.println(e.getStackTrace()[1].getClassName() + ": " + e.getMessage());
-		}
 	}
 
 	public void stop()
