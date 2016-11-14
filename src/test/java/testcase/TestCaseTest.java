@@ -112,6 +112,7 @@ public class TestCaseTest
 
 		// act
 		boolean isRunning1 = testCase.isRunning();
+
 		Thread thread = new Thread(
 			new Runnable() {
 				@Override

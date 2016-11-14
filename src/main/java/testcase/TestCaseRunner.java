@@ -1,8 +1,5 @@
 package testcase;
 
-import time.Time;
-
-
 /**
  * Created by HiekmaHe on 10.11.2016.
  *
@@ -13,8 +10,6 @@ public class TestCaseRunner
 {
 	private TestCase testCase;
 	private Thread thread;
-	private Time timestampEnd;
-	private Time timestampStart;
 
 	public TestCaseRunner(TestCase testCaseToRun)
 	{
@@ -24,7 +19,7 @@ public class TestCaseRunner
 
 	public void start() throws InterruptedException
 	{
-		timestampStart = Time.now();
+//		timestampStart = Time.now(); 2016-11-14 delete in 2 weeks
 		thread.start();
 		Thread.sleep(2);
 	}
@@ -32,7 +27,7 @@ public class TestCaseRunner
 	public void stop()
 	{
 		testCase.isRunning(false);
-		timestampEnd = Time.now();
+//		timestampEnd = Time.now(); 2016-11-14 delete in 2 weeks
 	}
 
 	@Override
@@ -43,18 +38,8 @@ public class TestCaseRunner
    	return message;
 	}
 
-	public Time duration()
-	{
-		return testCase.getDuration();
-	}
-
 	public boolean isAlive()
 	{
 		return thread.isAlive();
-	}
-
-	public Time getDuration()
-	{
-		return timestampEnd.difference(timestampStart);
 	}
 }

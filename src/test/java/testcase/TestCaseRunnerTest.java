@@ -64,7 +64,7 @@ public class TestCaseRunnerTest
 		TestCaseRunner testCaseRunner = new TestCaseRunner(testCase);
 
 		// assert
-		assertNotNull(testCase);
+		assertNotNull(testCaseRunner);
 	}
 
 	@Test
