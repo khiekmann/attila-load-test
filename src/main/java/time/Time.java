@@ -1,22 +1,22 @@
-package all;
+package time;
 
 import java.text.SimpleDateFormat;
-
-import static all.TimeConverter.millisToNanos;
-import static all.TimeConverter.secondsToNanos;
 
 
 /**
  * Created by HiekmaHe on 13.11.2016.
  *
- * SRP: include all time representation _and_ calculation here.
+ * SRP: Include all time representation here.
  */
 public class Time implements Comparable<Time>
 {
 
+	public static final Time ZERO = new Time(0);
+	public static final Time MINUSONE = new Time(-1);
+
 	public static Time seconds(long amountOfSeconds)
 	{
-		return new Time(secondsToNanos(amountOfSeconds));
+		return new Time(TimeConverter.secondsToNanos(amountOfSeconds));
 	}
 
 	public static Time now()
@@ -26,7 +26,7 @@ public class Time implements Comparable<Time>
 
 	public static Time millis(long amountOfMillis)
 	{
-		return new Time(millisToNanos(amountOfMillis));
+		return new Time(TimeConverter.millisToNanos(amountOfMillis));
 	}
 
 	public static Time nanos(long nanos)
@@ -97,8 +97,28 @@ public class Time implements Comparable<Time>
 		return isEqual;
 	}
 
-	public long toNanos()
+	public Time negate()
 	{
-		return timeAmount;
+		return this.multiply(Time.MINUSONE);
+	}
+
+	public Time multiply(Time multiplier)
+	{
+		return new Time(this.timeAmount * multiplier.timeAmount);
+	}
+
+	public Time difference(Time other)
+	{
+		Time subtracted = this.substract(other);
+		if (subtracted.lessThan(Time.ZERO))
+		{
+		subtracted = subtracted.negate();
+		}
+		return subtracted;
+	}
+
+	public void sleep() throws InterruptedException
+	{
+		Thread.sleep(toMillis());
 	}
 }

@@ -1,11 +1,9 @@
-package development;
+package time;
 
 import org.junit.Test;
 
-import all.Time;
-import all.TimeConverter;
-
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
@@ -14,6 +12,17 @@ import static org.junit.Assert.assertTrue;
  */
 public class TimeConverterTest
 {
+	@Test
+	public void testCreation() {
+		// arrange
+		TimeConverter converter;
+
+		// act
+		converter = new TimeConverter();
+
+		// assert
+		assertNotNull(converter);
+	}
 	@Test
 	public void secondsToNanos() throws Exception
 	{
@@ -95,8 +104,5 @@ public class TimeConverterTest
 		Time delta = now1.substract(now2);
 
 		// assert
-		System.out.println(now1);
-		System.out.println(now2);
-		System.out.println(delta);
 	}
 }
