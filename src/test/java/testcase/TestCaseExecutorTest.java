@@ -14,17 +14,16 @@ import static junit.framework.TestCase.*;
  * Created by HiekmaHe on 13.11.2016.
  *
  */
-public class TestCaseRunnerTest
+public class TestCaseExecutorTest
 {
-
-	public static String expectedToString = "TestCase:\n"
-			+ "state: NEW\n";
-
+	public static String expectedToString = "TestCaseExecutor:\n"
+			+ "isShutdown: false\n"
+			+ "isTerminated: false\n";
 
 	private UseCase useCase;
 	private DataForTestCase data;
 	private TestCase testCase;
-	private TestCaseRunner testCaseRunner;
+	private TestCaseExecutor testCaseExecutor;
 
 	@Before
 	public void before() {
@@ -35,7 +34,7 @@ public class TestCaseRunnerTest
 		testCase = new TestCase(useCase, data);
 
 		// act
-		testCaseRunner = new TestCaseRunner(testCase);
+		testCaseExecutor = new TestCaseExecutor(testCase);
 
 		// assert
 		assertNotNull(testCase);
@@ -50,7 +49,7 @@ public class TestCaseRunnerTest
 		useCase = null;
 		data = null;
 		testCase = null;
-		testCaseRunner = null;
+		testCaseExecutor = null;
 
 		// assert
 	}
@@ -66,7 +65,7 @@ public class TestCaseRunnerTest
 		TestCase testCase = new TestCase(useCase, data);
 
 		// act
-		TestCaseRunner testCaseRunner = new TestCaseRunner(testCase);
+		TestCaseExecutor testCaseRunner = new TestCaseExecutor(testCase);
 
 		// assert
 		assertNotNull(testCaseRunner);
@@ -78,13 +77,14 @@ public class TestCaseRunnerTest
 		// arrange
 
 		// act
-		boolean isAlive1 = testCaseRunner.isRunning();
-		testCaseRunner.startRun();
-		boolean isAlive2 = testCaseRunner.isRunning();
-		Thread.sleep(300);
-		boolean isAlive3 = testCaseRunner.isRunning();
-		Thread.sleep(300);
-		boolean isAlive4 = testCaseRunner.isRunning();
+		boolean isAlive1 = testCaseExecutor.isRunning();
+		testCaseExecutor.startRun();
+		Thread.sleep(100);
+		boolean isAlive2 = testCaseExecutor.isRunning();
+		Thread.sleep(100);
+		boolean isAlive3 = testCaseExecutor.isRunning();
+		Thread.sleep(100);
+		boolean isAlive4 = testCaseExecutor.isRunning();
 
 		// assert
 		assertFalse(isAlive1);
@@ -98,13 +98,14 @@ public class TestCaseRunnerTest
 		// arrange
 
 		// act
-		boolean isAlive1 = testCaseRunner.isRunning();
-		testCaseRunner.startRun();
-		boolean isAlive2 = testCaseRunner.isRunning();
-		Thread.sleep(300);
-		testCaseRunner.stopRun();
-		Thread.sleep(1000);
-		boolean isAlive3 = testCaseRunner.isRunning();
+		boolean isAlive1 = testCaseExecutor.isRunning();
+		testCaseExecutor.startRun();
+		Thread.sleep(100);
+		boolean isAlive2 = testCaseExecutor.isRunning();
+		Thread.sleep(100);
+		testCaseExecutor.stopRun();
+		Thread.sleep(100);
+		boolean isAlive3 = testCaseExecutor.isRunning();
 
 		// assert
 		assertFalse(isAlive1);
@@ -117,12 +118,12 @@ public class TestCaseRunnerTest
 		// arrange
 
 		// act
-		testCaseRunner.startRun();
+		testCaseExecutor.startRun();
 		Thread.sleep(200);
-		testCaseRunner.stopRun();
+		testCaseExecutor.stopRun();
 		Time timestampStart = Time.now();
 		Time timestampEnd = Time.ZERO;
-		while(testCaseRunner.isRunning()) {
+		while(testCaseExecutor.isRunning()) {
 			timestampEnd = Time.now();
 		}
 		Time delta = timestampEnd.difference(timestampStart);
@@ -137,10 +138,10 @@ public class TestCaseRunnerTest
 		// arrange
 
 		// act
-		testCase = new TestCase(useCase, data);
+		testCaseExecutor = new TestCaseExecutor(testCase);
 
 		// assert
-		assertEquals(expectedToString, testCaseRunner.toString());
+		assertEquals(expectedToString, testCaseExecutor.toString());
 	}
 
 	@Test

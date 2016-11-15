@@ -6,7 +6,7 @@ package testcase;
  * SRP: Run a UseCase
  *
  */
-public class TestCaseRunner
+public class TestCaseRunner implements TestCaseRunnable
 {
 	private TestCase testCase;
 	private Thread thread;
@@ -17,14 +17,15 @@ public class TestCaseRunner
 		thread = new Thread(testCase);
 	}
 
-	public void start() throws InterruptedException
+	@Override
+	public void startRun()
 	{
 //		timestampStart = Time.now(); 2016-11-14 delete in 2 weeks
 		thread.start();
-		Thread.sleep(2);
 	}
 
-	public void stop()
+	@Override
+	public void stopRun()
 	{
 		testCase.isRunning(false);
 //		timestampEnd = Time.now(); 2016-11-14 delete in 2 weeks
@@ -34,11 +35,11 @@ public class TestCaseRunner
 	public String toString() {
 		String message = "TestCase:\n";
 		message += "state: " + thread.getState() + "\n";
-		message += testCase.toString();
    	return message;
 	}
 
-	public boolean isAlive()
+	@Override
+	public boolean isRunning()
 	{
 		return thread.isAlive();
 	}

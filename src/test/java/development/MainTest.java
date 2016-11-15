@@ -39,9 +39,9 @@ public class MainTest
 
 		// act
 		Time timestartStamp = Time.now();
-		testCaseRunner.start();
+		testCaseRunner.startRun();
 		stopAfter.sleep();
-		testCaseRunner.stop();
+		testCaseRunner.stopRun();
 		Time duration = Time.elapseSince(timestartStamp);
 
 		// assert
@@ -72,9 +72,9 @@ public class MainTest
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunner.start();
+		testCaseRunner.startRun();
 		stopAfter.sleep();
-		testCaseRunner.stop();
+		testCaseRunner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
@@ -89,7 +89,7 @@ public class MainTest
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunner.start();
+		testCaseRunner.startRun();
 		Time duration = Time.elapseSince(timestampStart);
 		Time maxDuration = Time.seconds(2).add(Time.millis(500));
 
@@ -105,9 +105,9 @@ public class MainTest
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunner.start();
+		testCaseRunner.startRun();
 		stopAfter.sleep();
-		testCaseRunner.stop();
+		testCaseRunner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
@@ -122,9 +122,9 @@ public class MainTest
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunner.start();
+		testCaseRunner.startRun();
 		stopAfter.sleep();
-		testCaseRunner.stop();
+		testCaseRunner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
@@ -140,13 +140,13 @@ public class MainTest
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunner.start();
+		testCaseRunner.startRun();
 		stopAfter.sleep();
-		testCaseRunner.stop();
+		testCaseRunner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
-		assertTrue("Run to quick.." + testCase, duration.greaterThan(stopAfter));
+		assertTrue("Run to quick.." + duration + " " + stopAfter, duration.greaterThan(stopAfter));
 		assertTrue("Run takes too long." + testCase,   maxDuration.greaterThan(duration));
 	}
 
@@ -159,9 +159,9 @@ public class MainTest
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunner.start();
+		testCaseRunner.startRun();
 		stopAfter.sleep();
-		testCaseRunner.stop();
+		testCaseRunner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
