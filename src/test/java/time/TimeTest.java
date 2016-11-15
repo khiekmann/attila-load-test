@@ -43,7 +43,7 @@ public class TimeTest
 	}
 
 	@Test
-	public void testCompateTo_Equal() {
+	public void testCompareTo_Equal() {
 		// arrange
 		Time a5 = new Time(5);
 		Time a5_ = new Time(5);
