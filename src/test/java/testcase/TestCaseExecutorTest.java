@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import all.UseCase;
+import all.UseCaseDummy;
 import time.Time;
 
 import static junit.framework.TestCase.*;
@@ -17,10 +17,10 @@ import static junit.framework.TestCase.*;
 public class TestCaseExecutorTest
 {
 	public static String expectedToString = "TestCaseExecutor:\n"
-			+ "isShutdown: false\n"
-			+ "isTerminated: false\n";
+			+ "isShutdown: true\n"
+			+ "isTerminated: true\n";
 
-	private UseCase useCase;
+	private UseCaseDummy useCase;
 	private DataForTestCase data;
 	private TestCase testCase;
 	private TestCaseExecutor testCaseExecutor;
@@ -28,7 +28,7 @@ public class TestCaseExecutorTest
 	@Before
 	public void before() {
 		// arrange
-		useCase = new UseCase();
+		useCase = new UseCaseDummy();
 		data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(60);
 		testCase = new TestCase(useCase, data);
@@ -59,7 +59,7 @@ public class TestCaseExecutorTest
 	public void testCreation()
 	{
 		// arrange
-		UseCase useCase = new UseCase();
+		UseCaseDummy useCase = new UseCaseDummy();
 		DataForTestCase data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(60);
 		TestCase testCase = new TestCase(useCase, data);
@@ -136,17 +136,33 @@ public class TestCaseExecutorTest
 	public void testToString() throws Exception
 	{
 		// arrange
+		Time aShort = Time.millis(300);
+		String neitherShutdownNorTerminated = "TestCaseExecutor:\n"
+				+ "isShutdown: false\n"
+				+ "isTerminated: false\n";
+		String  shutdownAndTerminated  = "TestCaseExecutor:\n"
+				+ "isShutdown: true\n"
+				+ "isTerminated: true\n";
 
 		// act
 		testCaseExecutor = new TestCaseExecutor(testCase);
+		String toString1 = testCaseExecutor.toString();
+		testCaseExecutor.startRun();
+		aShort.sleep();
+		String toString2 = testCaseExecutor.toString();
+		aShort.sleep();
+		testCaseExecutor.stopRun();
+		aShort.sleep();
+		String toString3 = testCaseExecutor.toString();
 
 		// assert
-		assertEquals(expectedToString, testCaseExecutor.toString());
+		assertEquals(neitherShutdownNorTerminated, toString1);
+		assertEquals(neitherShutdownNorTerminated, toString2);
+		assertEquals(shutdownAndTerminated, toString3);
 	}
 
 	@Test
 	public void testExecutor() {
 		System.out.println("Implement java.util.concurrent.Executor");
-
 	}
 }

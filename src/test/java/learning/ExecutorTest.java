@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
-import all.UseCase;
+import all.UseCaseDummy;
 import testcase.DataForTestCase;
 import testcase.TestCase;
 
@@ -46,7 +46,7 @@ public class ExecutorTest
 
 	@Test
 	public void testExecutorWithTestCase() throws Exception{
-		UseCase useCase = new UseCase();
+		UseCaseDummy useCase = new UseCaseDummy();
 		DataForTestCase data = new DataForTestCase();
 		Runnable r1 = new TestCase(useCase, data);
 

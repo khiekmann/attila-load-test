@@ -9,5 +9,5 @@ public interface TestCaseRunnable
 
 	void startRun();
 
-	void stopRun();
+	void stopRun() throws InterruptedException;
 }
