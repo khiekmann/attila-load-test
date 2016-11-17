@@ -51,7 +51,7 @@ public class ActuallySendDataTest
 
 	@Ignore
 	@Test
-	public void testWiremock() throws Exception {
+	public void testWiremockManually() throws Exception {
 		System.out.println(host + ":" + port + urlPath);
 		Thread.sleep(60000);
 	}

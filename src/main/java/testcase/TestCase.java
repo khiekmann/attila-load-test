@@ -1,6 +1,6 @@
 package testcase;
 
-import all.UseCaseable;
+import useCase.UseCaseable;
 import time.Time;
 
 

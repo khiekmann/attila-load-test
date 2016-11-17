@@ -1,17 +1,17 @@
 package development;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.*;
 
-import all.Connectionable;
-import all.PostConnection;
-import all.UseCaseMySpecial;
-import all.UseCaseable;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import connection.MySpecialConnection;
+import connection.Sendable;
+import useCase.UseCaseMySpecial;
+import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.assertNotNull;
@@ -31,14 +31,14 @@ public class UseCaseMySpecialTest
 	private String urlPath = "/test.txt";
 
 	@Before
-	public void before() throws MalformedURLException
+	public void before() throws IOException
 	{
 		List<String> messages = new ArrayList<>();
 		messages.add("A");
 		messages.add("B");
 		messages.add("C");
 		URL url = new URL("http://localhost:" + port + urlPath);
-		Connectionable sender = new PostConnection(url);
+		Sendable sender = new MySpecialConnection(url);
 		useCase = new UseCaseMySpecial(messages, sender);
 		stubFor(post(urlEqualTo(urlPath)).willReturn(
 				aResponse()
@@ -51,7 +51,7 @@ public class UseCaseMySpecialTest
 
 	@Ignore
 	@Test
-	public void testWiremock() throws Exception
+	public void testWiremockManually() throws Exception
 	{
 		// arrange
 

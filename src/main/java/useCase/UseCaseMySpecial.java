@@ -1,10 +1,12 @@
-package all;
+package useCase;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import connection.Sendable;
 
 
 /**
@@ -18,12 +20,11 @@ public class UseCaseMySpecial implements UseCaseable
 
 	private List<String> messages;
 	private String message;
-	private Connectionable connection;
+	private Sendable connection;
 	private int counter;
 
-	public UseCaseMySpecial(List<String> useTheseMessages, Connectionable useThisConnector) {
+	public UseCaseMySpecial(List<String> useTheseMessages, Sendable useThisConnector) {
 		messages = useTheseMessages;
-		message = new String();
 		connection = useThisConnector;
 		counter = -1;
 	}

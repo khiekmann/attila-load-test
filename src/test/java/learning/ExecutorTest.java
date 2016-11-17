@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
-import all.UseCaseDummy;
+import useCase.UseCaseDummy;
 import testcase.DataForTestCase;
 import testcase.TestCase;
 

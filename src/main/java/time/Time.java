@@ -119,7 +119,7 @@ public class Time implements Comparable<Time>
 
 	public void sleep() throws InterruptedException
 	{
-		Thread.sleep(toMillis());
+		Thread.sleep(toMillis() + 1);
 	}
 
 	public static Time elapseSince(Time then)
