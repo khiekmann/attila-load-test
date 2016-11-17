@@ -1,175 +1,77 @@
 package development;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 
-import all.*;
+import all.Connectionable;
+import all.PostConnection;
+import all.UseCaseMySpecial;
+import all.UseCaseable;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import testcase.DataForTestCase;
 import testcase.TestCase;
-import testcase.TestCaseRunner;
+import testcase.TestCaseExecutor;
+import testcase.TestCaseRunnable;
 import time.Time;
 
-import static junit.framework.TestCase.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static junit.framework.TestCase.assertFalse;
+
 
 /**
- * Created by HiekmaHe on 10.11.2016.
- *
+ * Created by HiekmaHe on 16.11.2016.
  */
 public class MainTest
 {
-
-	private DataForTestCase data;
-	private TestCase testCase;
-	private TestCaseRunner testCaseRunner;
+	private static int port = 8080;
+	@ClassRule
+	public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
+	@Rule
+	public WireMockClassRule instanceRule = wireMockRule;
+	private String urlPath = "/somewhere";
 
 	@Before
 	public void before() {
-		UseCase useCase = new UseCase();
-		data = new DataForTestCase();
-		data.expectedDuration = Time.seconds(10);
-		testCase = new TestCase(useCase, data);
-		testCaseRunner = new TestCaseRunner(testCase);
+		stubFor(any(urlEqualTo(urlPath)).willReturn(
+				aResponse()
+						.withStatus(202)
+				)
+		);
 	}
 
 	@Test
-	public void runOutOfTheBox() throws Exception
+	public void runFor5Seconds() throws MalformedURLException, InterruptedException
 	{
 		// arrange
-		Time stopAfter = Time.millis(1500);
+		List<String> messages = new ArrayList<>();
+		messages.add("A");
+		messages.add("B");
+		messages.add("C");
+		URL url = new URL("http://localhost" + urlPath);
+		Connectionable connection = new PostConnection(url);
+		UseCaseable useCase = new UseCaseMySpecial(messages, connection);
+		DataForTestCase data = new DataForTestCase();
+		TestCase testCase = new TestCase(useCase, data);
+		TestCaseRunnable runner = new TestCaseExecutor(testCase);
+		boolean unexpectedExceptionThrown = false;
 
 		// act
-		Time timestartStamp = Time.now();
-		testCaseRunner.startRun();
-		stopAfter.sleep();
-		testCaseRunner.stopRun();
-		Time duration = Time.elapseSince(timestartStamp);
+		try {
+			runner.startRun();
+			Time.seconds(2).sleep();
+			runner.stopRun();
+		} catch (Exception e) {
+			unexpectedExceptionThrown = true;
+		}
 
 		// assert
-		assertTrue("Runs too long. ", duration.greaterThan(stopAfter));
-	}
-
-	@Test
-	public void runOutOfTheBox_HandleResult_NotRun() {
-		// arrange
-
-		// act
-		DataForTestCase result = testCase.getResult();
-		String resultToString = "DataForTestCase\n"
-				+ "expectedDuration: 0\n"
-				+ "duration: 0\n"
-				+ "timestampEnd: 0\n"
-				+ "timestampStart: 0\n";
-
-		// assert
-		assertEquals(resultToString, result.toString());
-	}
-
-	@Test
-	public void runUseCaseFor2Seconds_assertLowerBound() throws Exception
-	{
-		// arrange
-		Time stopAfter = Time.seconds(2);
-
-		// act
-		Time timestampStart = Time.now();
-		testCaseRunner.startRun();
-		stopAfter.sleep();
-		testCaseRunner.stopRun();
-		Time duration = Time.elapseSince(timestampStart);
-
-		// assert
-		assertTrue("Took not long enough." + testCase,  duration.greaterThan(stopAfter));
-	}
-
-	@Test
-	public void runUseCaseFor2Seconds_assertUpperBound() throws Exception
-	{
-		// arrange
-		data.expectedDuration = Time.seconds(2);
-
-		// act
-		Time timestampStart = Time.now();
-		testCaseRunner.startRun();
-		Time duration = Time.elapseSince(timestampStart);
-		Time maxDuration = Time.seconds(2).add(Time.millis(500));
-
-		// assert
-		assertTrue("Took too long.", maxDuration.greaterThan(duration));
-	}
-
-	@Test
-	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertLowerBound() throws Exception
-	{
-		// arrange
-		Time stopAfter = Time.seconds(2);
-
-		// act
-		Time timestampStart = Time.now();
-		testCaseRunner.startRun();
-		stopAfter.sleep();
-		testCaseRunner.stopRun();
-		Time duration = Time.elapseSince(timestampStart);
-
-		// assert
-		assertTrue("Took not long enough." + duration + " " + stopAfter, duration.greaterThan(stopAfter));
-	}
-
-	@Test
-	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertUpperBound() throws Exception {
-		// arrange
-		Time stopAfter = Time.seconds(2);
-		Time maxDuration = stopAfter.add(Time.millis(500));
-
-		// act
-		Time timestampStart = Time.now();
-		testCaseRunner.startRun();
-		stopAfter.sleep();
-		testCaseRunner.stopRun();
-		Time duration = Time.elapseSince(timestampStart);
-
-		// assert
-		assertTrue("Took too long.", maxDuration.greaterThan(duration));
-	}
-
-	@Test
-	public void runUseCaseFor2SecondsBecauseOfExternalStopCallAsThread() throws Exception
-	{
-		// arrange
-		Time stopAfter = Time.seconds(2);
-		Time maxDuration = data.expectedDuration.add(Time.millis(500));
-
-		// act
-		Time timestampStart = Time.now();
-		testCaseRunner.startRun();
-		stopAfter.sleep();
-		testCaseRunner.stopRun();
-		Time duration = Time.elapseSince(timestampStart);
-
-		// assert
-		assertTrue("Run to quick.." + duration + " " + stopAfter, duration.greaterThan(stopAfter));
-		assertTrue("Run takes too long." + testCase,   maxDuration.greaterThan(duration));
-	}
-
-	@Test
-	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_TestCaseRunnableNow() throws Exception
-	{
-		// arrange
-		Time stopAfter = Time.seconds(2);
-		Time maxDuration = Time.seconds(2).add( Time.millis(500));
-
-		// act
-		Time timestampStart = Time.now();
-		testCaseRunner.startRun();
-		stopAfter.sleep();
-		testCaseRunner.stopRun();
-		Time duration = Time.elapseSince(timestampStart);
-
-		// assert
-		assertTrue("Took too long.", maxDuration.greaterThan(duration));
-	}
-
-	@Test
-	public void handleSleepInterrupted() {
-
+		assertFalse(unexpectedExceptionThrown);
 	}
 }

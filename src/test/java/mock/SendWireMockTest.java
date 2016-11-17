@@ -30,10 +30,8 @@ public class SendWireMockTest
 {
 
 	private static int port = 8080;
-	@ClassRule
-	public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
-	@Rule
-	public WireMockClassRule instanceRule = wireMockRule;
+	@ClassRule public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
+	@Rule public WireMockClassRule instanceRule = wireMockRule;
 	private static URL url;
 	private String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
@@ -71,7 +69,7 @@ public class SendWireMockTest
 	}
 
 	@Test
-	public void testSendPostToRTM_responseCode() throws Exception
+	public void testSendPostToMySpecial_responseCode() throws Exception
 	{
 		// arrange
 		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -90,7 +88,7 @@ public class SendWireMockTest
 	}
 
 	@Test
-	public void testSendPostToRTM_emptyResponse() throws IOException
+	public void testSendPostToMySpecial_emptyResponse() throws IOException
 	{
 		// arrange
 		String expected = "Accepted";

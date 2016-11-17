@@ -3,7 +3,7 @@ package testcase;
 import org.junit.Before;
 import org.junit.Test;
 
-import all.UseCase;
+import all.UseCaseDummy;
 import time.Time;
 
 import static junit.framework.TestCase.assertFalse;
@@ -17,13 +17,13 @@ import static org.junit.Assert.assertEquals;
 public class TestCaseTest
 {
 
-	UseCase useCase;
+	UseCaseDummy useCase;
 	DataForTestCase data;
 	TestCase testCase;
 
 	@Before
 	public void before() {
-		useCase = new UseCase();
+		useCase = new UseCaseDummy();
 		data = new DataForTestCase();
 		testCase = new TestCase(useCase, data);
 	}

@@ -1,6 +1,6 @@
 package testcase;
 
-import all.UseCase;
+import all.UseCaseable;
 import time.Time;
 
 
@@ -12,13 +12,16 @@ import time.Time;
  */
 public class TestCase implements Runnable
 {
-	private DataForTestCase data;
+	private final UseCaseable useCase;
+	private final DataForTestCase data;
+
 	private DataForTestCase result;
 	private boolean isRunning;
 
-	public TestCase(UseCase useCase, DataForTestCase inData)
+	public TestCase(UseCaseable useThisUseCase, DataForTestCase useThisData)
 	{
-		data = inData;
+		useCase = useThisUseCase;
+		data = useThisData;
 		result = new DataForTestCase();
 	}
 
@@ -26,14 +29,9 @@ public class TestCase implements Runnable
 	{
 		isRunning(true);
 		while(isRunning())
-			try
-			{
-				Thread.sleep(100);
-			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
+		{
+			useCase.doOneIteration();
+		}
 		stop();
 	}
 

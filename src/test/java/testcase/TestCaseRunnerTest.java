@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import all.UseCase;
+import all.UseCaseDummy;
 import time.Time;
 
 import static junit.framework.TestCase.*;
@@ -18,10 +18,10 @@ public class TestCaseRunnerTest
 {
 
 	public static String expectedToString = "TestCase:\n"
-			+ "state: NEW\n";
+			+ "state: TERMINATED\n";
 
 
-	private UseCase useCase;
+	private UseCaseDummy useCase;
 	private DataForTestCase data;
 	private TestCase testCase;
 	private TestCaseRunner testCaseRunner;
@@ -29,7 +29,7 @@ public class TestCaseRunnerTest
 	@Before
 	public void before() {
 		// arrange
-		useCase = new UseCase();
+		useCase = new UseCaseDummy();
 		data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(60);
 		testCase = new TestCase(useCase, data);
@@ -60,7 +60,7 @@ public class TestCaseRunnerTest
 	public void testCreation()
 	{
 		// arrange
-		UseCase useCase = new UseCase();
+		UseCaseDummy useCase = new UseCaseDummy();
 		DataForTestCase data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(60);
 		TestCase testCase = new TestCase(useCase, data);
@@ -135,12 +135,29 @@ public class TestCaseRunnerTest
 	public void testToString() throws Exception
 	{
 		// arrange
+		Time aShort = Time.millis(300);
+		testCaseRunner = new TestCaseRunner(testCase);
+		String newState = "TestCase:\n"
+			+ "state: NEW\n";
+		String timedWaitingState = "TestCase:\n"
+				+ "state: TIMED_WAITING\n";
+		String terminatedState = "TestCase:\n"
+				+ "state: TERMINATED\n";
 
 		// act
-		testCase = new TestCase(useCase, data);
+		String toString1 = testCaseRunner.toString();
+		testCaseRunner.startRun();
+		aShort.sleep();
+		String toString2 = testCaseRunner.toString();
+		aShort.sleep();
+		testCaseRunner.stopRun();
+		aShort.sleep();
+		String toString3 = testCaseRunner.toString();
 
 		// assert
-		assertEquals(expectedToString, testCaseRunner.toString());
+		assertEquals(newState, toString1);
+		assertEquals(timedWaitingState, toString2);
+		assertEquals(terminatedState, toString3);
 	}
 
 	@Test

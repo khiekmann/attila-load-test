@@ -8,27 +8,14 @@ package testcase;
  */
 public class TestCaseRunner implements TestCaseRunnable
 {
-	private TestCase testCase;
-	private Thread thread;
+
+	private final TestCase testCase;
+	private final Thread thread;
 
 	public TestCaseRunner(TestCase testCaseToRun)
 	{
 		testCase = testCaseToRun;
-		thread = new Thread(testCase);
-	}
-
-	@Override
-	public void startRun()
-	{
-//		timestampStart = Time.now(); 2016-11-14 delete in 2 weeks
-		thread.start();
-	}
-
-	@Override
-	public void stopRun()
-	{
-		testCase.isRunning(false);
-//		timestampEnd = Time.now(); 2016-11-14 delete in 2 weeks
+		thread = new Thread(testCaseToRun);
 	}
 
 	@Override
@@ -42,5 +29,19 @@ public class TestCaseRunner implements TestCaseRunnable
 	public boolean isRunning()
 	{
 		return thread.isAlive();
+	}
+
+	@Override
+	public void startRun()
+	{
+		testCase.isRunning(true);
+		thread.start();
+	}
+
+	@Override
+	public void stopRun()
+	{
+		testCase.isRunning(false);
+		thread.interrupt();
 	}
 }
