@@ -3,7 +3,7 @@ package testcase;
 import org.junit.Before;
 import org.junit.Test;
 
-import all.UseCaseDummy;
+import useCase.UseCaseDummy;
 import time.Time;
 
 import static junit.framework.TestCase.assertFalse;

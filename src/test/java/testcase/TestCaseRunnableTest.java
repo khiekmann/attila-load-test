@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import all.UseCaseDummy;
+import useCase.UseCaseDummy;
 import time.Time;
 
 import static junit.framework.TestCase.*;

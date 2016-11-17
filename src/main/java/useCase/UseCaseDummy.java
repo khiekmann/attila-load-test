@@ -1,4 +1,4 @@
-package all;
+package useCase;
 
 /**
  * Created by HiekmaHe on 10.11.2016.
