@@ -5,18 +5,20 @@ import java.io.IOException;
 
 /**
  * Created by HiekmaHe on 17.11.2016.
+ *
+ * SRP: Provide responseCode
  */
-public class ConnectionResponse extends GetConnectionable
+public class ConnectionResponse extends ConnectionAbstract
 {
 	private int responseCode;
 
-	public ConnectionResponse(GetConnectionable getConnectionable) throws IOException
+	public ConnectionResponse(ConnectionSend connection) throws IOException
 	{
-		super(getConnectionable);
-		responseCode = connection.getResponseCode();
+		super(connection);
+		responseCode = getHttpUrl().getResponseCode();
 	}
 
-	public int getResponseCode()
+	public int code()
 	{
 		return responseCode;
 	}

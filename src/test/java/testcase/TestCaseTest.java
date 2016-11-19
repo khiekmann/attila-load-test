@@ -1,11 +1,24 @@
 package testcase;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 
-import useCase.UseCaseDummy;
+import attila.AttilaConnectionCreate;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import connection.Send_Response_Disconnect;
+import connection.Sendable;
 import time.Time;
+import useCase.UseCaseDummy;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -21,9 +34,35 @@ public class TestCaseTest
 	DataForTestCase data;
 	TestCase testCase;
 
+	private static int port = 8080;
+	@ClassRule
+	public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
+	@Rule
+	public WireMockClassRule instanceRule = wireMockRule;
+	private String host = "http://localhost:";
+	private static URL url;
+	private String urlPath = "/cai/rtm/v1/d";
+
 	@Before
-	public void before() {
-		useCase = new UseCaseDummy();
+	public void before() throws IOException
+	{
+		url = new URL(host + port + urlPath);
+		stubFor(post(urlEqualTo(urlPath)).willReturn(
+				aResponse()
+						.withStatus(202)
+				)
+		);
+
+		List<String> messages = new ArrayList<>();
+		messages.add("A");
+		messages.add("B");
+		messages.add("C");
+		String urlPath = "/somewhere";
+		URL url = new URL("http://localhost:" + port + urlPath);
+		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
+		httpUrl.setDoOutput(true);
+		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
+		useCase = new UseCaseDummy(messages, sender);
 		data = new DataForTestCase();
 		testCase = new TestCase(useCase, data);
 	}

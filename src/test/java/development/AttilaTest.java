@@ -1,16 +1,18 @@
 package development;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.*;
 
+import attila.AttilaConnectionCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.MySpecialConnection;
+import connection.Send_Response_Disconnect;
 import connection.Sendable;
-import useCase.UseCaseMySpecial;
+import useCase.UseCaseDummy;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -21,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by HiekmaHe on 16.11.2016.
  */
-public class UseCaseMySpecialTest
+public class AttilaTest
 {
 	private static int port = 8080;
 	@ClassRule public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
@@ -33,18 +35,22 @@ public class UseCaseMySpecialTest
 	@Before
 	public void before() throws IOException
 	{
-		List<String> messages = new ArrayList<>();
-		messages.add("A");
-		messages.add("B");
-		messages.add("C");
-		URL url = new URL("http://localhost:" + port + urlPath);
-		Sendable sender = new MySpecialConnection(url);
-		useCase = new UseCaseMySpecial(messages, sender);
 		stubFor(post(urlEqualTo(urlPath)).willReturn(
 				aResponse()
 						.withStatus(202)
 				)
 		);
+
+		List<String> messages = new ArrayList<>();
+		messages.add("A");
+		messages.add("B");
+		messages.add("C");
+		URL url = new URL("http://localhost:" + port + urlPath);
+		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
+		httpUrl.setDoOutput(true);
+		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
+		useCase = new UseCaseDummy(messages, sender);
+
 		// assert
 		assertEquals("http://localhost:8080/test.txt", url.toString());
 	}

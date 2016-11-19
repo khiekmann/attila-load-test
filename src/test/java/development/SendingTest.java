@@ -1,20 +1,23 @@
 package development;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
 
+import attila.AttilaConnectionCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.PostConnection;
+import connection.Send_Response_Disconnect;
 import connection.Sendable;
 import testcase.DataForTestCase;
 import testcase.TestCase;
 import testcase.TestCaseExecutor;
-import testcase.TestCaseRunnable;
 import useCase.UseCaseDummy;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -33,9 +36,10 @@ public class SendingTest
 	private String urlPath = "/cairtmv1d";
 	private URL url;
 	private String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+	private TestCaseExecutor testCaseRunnable;
 
 	@Before
-	public void before() throws MalformedURLException
+	public void before() throws Exception
 	{
 		String host = "http://localhost:";
 		url = new URL(host + port + urlPath);
@@ -44,6 +48,17 @@ public class SendingTest
 						.withStatus(202)
 				)
 		);
+		List<String> messages = new ArrayList<>();
+		messages.add("A");
+		messages.add("B");
+		messages.add("C");
+		String urlPath = "/somewhere";
+		URL url = new URL("http://localhost:" + port + urlPath);
+		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
+		UseCaseDummy useCase = new UseCaseDummy(messages, sender);
+		DataForTestCase data = new DataForTestCase();
+		TestCase testCase = new TestCase(useCase, data);
+		testCaseRunnable = new TestCaseExecutor(testCase);
 	}
 
 	@Test
@@ -69,35 +84,18 @@ public class SendingTest
 	public void testSending() throws Exception
 	{
 		// arrange
-		UseCaseDummy useCase = new UseCaseDummy();
-		DataForTestCase data = new DataForTestCase();
-		TestCase testCase = new TestCase(useCase, data);
-		TestCaseRunnable testCaseRunnable = new TestCaseExecutor(testCase);
 
 		// act
-		boolean isRunning1_false = testCase.isRunning();
+		boolean isRunning1_false = testCaseRunnable.isRunning();
 		testCaseRunnable.startRun();
 		Thread.sleep(2000);
 		boolean isRunning2_true = testCaseRunnable.isRunning();
 		testCaseRunnable.stopRun();
-		boolean isRunning3_false = testCase.isRunning();
+		boolean isRunning3_false = testCaseRunnable.isRunning();
 
 		// assert
 		assertFalse(isRunning1_false);
 		assertTrue(isRunning2_true);
 		assertFalse(isRunning3_false);
-	}
-
-	@Test
-	public void testSendingSender() throws IOException
-	{
-		// arrange
-		URL url = new URL("http://localhost:" + port + urlPath);
-		Sendable sender = new PostConnection(url);
-
-		// act
-		sender.send("hallo welt");
-
-		// assert
 	}
 }

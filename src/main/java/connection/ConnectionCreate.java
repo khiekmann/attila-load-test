@@ -2,19 +2,18 @@ package connection;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 
 /**
  * Created by HiekmaHe on 17.11.2016.
  *
- * SRP: Create HTTPURLConnection
  */
-public class ConnectionCreate extends GetConnectionable
+public abstract class ConnectionCreate extends ConnectionAbstract
 {
-	public ConnectionCreate(URL url, MyRequestMethod method) throws IOException
+	public ConnectionCreate(HttpURLConnection httpUrl)
 	{
-		super((HttpURLConnection) url.openConnection());
-		connection.setRequestMethod(method.name());
+		super(httpUrl);
 	}
+
+	public abstract ConnectionCreate create() throws IOException;
 }
