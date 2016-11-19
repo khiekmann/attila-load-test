@@ -8,13 +8,13 @@ import java.io.IOException;
  *
  * SRP: Send message
  */
-public class ConnectionSend extends GetConnectionable
+public class ConnectionSend extends ConnectionAbstract
 {
-	public ConnectionSend (GetConnectionable getConnectionable, String message) throws IOException
+	public ConnectionSend (ConnectionCreate connection, String message) throws IOException
 	{
-		super(getConnectionable);
-		connection.getOutputStream().write(message.getBytes());
-		connection.getOutputStream().flush();
-		connection.getOutputStream().close();
+		super(connection);
+		getHttpUrl().getOutputStream().write(message.getBytes());
+		getHttpUrl().getOutputStream().flush();
+		getHttpUrl().getOutputStream().close();
 	}
 }

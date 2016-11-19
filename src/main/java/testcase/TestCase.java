@@ -18,10 +18,10 @@ public class TestCase implements Runnable
 	private DataForTestCase result;
 	private boolean isRunning;
 
-	public TestCase(UseCaseable useThisUseCase, DataForTestCase useThisData)
+	public TestCase(UseCaseable useCase, DataForTestCase data)
 	{
-		useCase = useThisUseCase;
-		data = useThisData;
+		this.useCase = useCase;
+		this.data = data;
 		result = new DataForTestCase();
 	}
 

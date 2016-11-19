@@ -1,6 +1,7 @@
 package development;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,19 +11,19 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import attila.AttilaConnectionCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.PostConnection;
+import connection.Send_Response_Disconnect;
 import connection.Sendable;
 import testcase.DataForTestCase;
 import testcase.TestCase;
 import testcase.TestCaseExecutor;
 import testcase.TestCaseRunnable;
 import time.Time;
-import useCase.UseCaseMySpecial;
+import useCase.UseCaseDummy;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 
 
@@ -37,9 +38,17 @@ public class MainTest
 	@Rule
 	public WireMockClassRule instanceRule = wireMockRule;
 	private String urlPath = "/somewhere";
+	private String onlyPostUrlPath = "/onlyPost";
 
 	@Before
 	public void before() {
+		stubFor(post(urlEqualTo(onlyPostUrlPath)).withRequestBody(equalTo("foo"))
+				.willReturn(
+						aResponse()
+								.withStatus(200)
+				)
+		);
+
 		stubFor(any(urlEqualTo(urlPath)).withRequestBody(equalTo("foo"))
 				.willReturn(
 				aResponse()
@@ -52,21 +61,14 @@ public class MainTest
 	public void testPostRequestMethod() throws Exception
 	{
 		// arrange
-		String onlyPostUrlPath = "/onlyPost";
-		stubFor(post(urlEqualTo(onlyPostUrlPath)).withRequestBody(equalTo("foo"))
-				.willReturn(
-						aResponse()
-								.withStatus(200)
-				)
-		);
 		URL url = new URL("http://localhost:" + 8080 + onlyPostUrlPath);
-		PostConnection postConnection = new PostConnection(url);
+		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
 
 		// act
-		postConnection.send("foo");
+		sender.send("foo");
 
 		// assert
-		assertEquals(200, postConnection.getResponseCode());
+		assertEquals(200, sender.getResponseCode());
 	}
 
 	@Test
@@ -78,23 +80,20 @@ public class MainTest
 		messages.add("B");
 		messages.add("C");
 		URL url = new URL("http://localhost" + urlPath);
-		Sendable connection = new PostConnection(url);
-		UseCaseable useCase = new UseCaseMySpecial(messages, connection);
+		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
+		httpUrl.setDoOutput(true);
+		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
+		UseCaseable useCase = new UseCaseDummy(messages, sender);
 		DataForTestCase data = new DataForTestCase();
 		TestCase testCase = new TestCase(useCase, data);
 		TestCaseRunnable runner = new TestCaseExecutor(testCase);
 		boolean unexpectedExceptionThrown = false;
 
 		// act
-		try {
-			runner.startRun();
-			Time.seconds(2).sleep();
-			runner.stopRun();
-		} catch (Exception e) {
-			unexpectedExceptionThrown = true;
-		}
+		runner.startRun();
+		Time.seconds(2).sleep();
+		runner.stopRun();
 
 		// assert
-		assertFalse(unexpectedExceptionThrown);
 	}
 }
