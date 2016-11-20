@@ -21,7 +21,7 @@ public class FailsInTravis
 		String yearBlaBlaSeconds = timeObject.format("yyyy-MM-dd-HH-mm-ss");
 
 		// assert
-		System.out.println("1970-01-01-01-00-05" + " - " + yearBlaBlaSeconds);
+		System.err.println("1970-01-01-01-00-05" + " - " + yearBlaBlaSeconds);
 		assertEquals("1970-01-01-01-00-05", yearBlaBlaSeconds);
 	}
 
@@ -34,7 +34,7 @@ public class FailsInTravis
 		String dateAndNanos = timeObject.format("dd MMM yyyy HH:mm:ss,SSS");
 
 		// assert
-		System.out.println("01 Jan 1970 01:00:05,000" + " - " + dateAndNanos);
+		System.err.println("01 Jan 1970 01:00:05,000" + " - " + dateAndNanos);
 		assertEquals("01 Jan 1970 01:00:05,000", dateAndNanos);
 	}
 
