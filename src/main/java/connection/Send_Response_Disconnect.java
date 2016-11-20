@@ -12,6 +12,7 @@ public class Send_Response_Disconnect implements Sendable
 {
 	private final ConnectionCreate creator;
 	private int responseCode;
+	private ConnectionAction action;
 
 	public Send_Response_Disconnect(ConnectionCreate create) throws IOException
 	{
@@ -22,8 +23,8 @@ public class Send_Response_Disconnect implements Sendable
 	public void send(String message) throws IOException
 	{
 		ConnectionCreate create = creator.create();
-		ConnectionSend send = new ConnectionSend(create, message);
-		ConnectionResponse response = new ConnectionResponse(send);
+		ConnectionWrite write = new ConnectionWrite(create, message);
+		ConnectionResponse response = new ConnectionResponse(write);
 		responseCode = response.code();
 		new ConnectionDisconnect(response);
 	}

@@ -15,7 +15,7 @@ public class AttilaUseCase implements UseCaseable
 
 	private final List<String> messages;
 	private final Sendable sender;
-	private int responseCode = 0;
+	private int counter = 0;
 
 	public AttilaUseCase(List<String> messages, Sendable sender)
 	{
@@ -24,23 +24,19 @@ public class AttilaUseCase implements UseCaseable
 	}
 
 	@Override
-	public void doOneIteration()
+	public void doOneIteration() throws IOException
 	{
-		try
-		{
-			sender.send("hallo");
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		sender.send(getMessage());
 	}
 
 	@Override
 	public int getResponseCode()
 	{
+		return sender.getResponseCode();
+	}
 
-		System.out.println("Not implemented!");
-		return -1;
+	private String getMessage()
+	{
+		return messages.get(counter++ % messages.size());
 	}
 }

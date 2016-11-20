@@ -5,12 +5,12 @@ package connection;
  *
  * SRP: Disconnect
  */
-public class ConnectionDisconnect extends ConnectionAbstract
+public class ConnectionDisconnect extends ConnectionAction
 {
 
-	public ConnectionDisconnect(ConnectionResponse connection)
+	public ConnectionDisconnect(ConnectionResponse response)
 	{
-		super(connection);
+		super(response);
 		getHttpUrl().disconnect();
 	}
 }

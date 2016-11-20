@@ -8,13 +8,13 @@ import java.io.IOException;
  *
  * SRP: Provide responseCode
  */
-public class ConnectionResponse extends ConnectionAbstract
+public class ConnectionResponse extends ConnectionAction
 {
 	private int responseCode;
 
-	public ConnectionResponse(ConnectionSend connection) throws IOException
+	public ConnectionResponse(ConnectionWrite send) throws IOException
 	{
-		super(connection);
+		super(send);
 		responseCode = getHttpUrl().getResponseCode();
 	}
 

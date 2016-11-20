@@ -1,7 +1,9 @@
 package testcase;
 
-import useCase.UseCaseable;
+import java.io.IOException;
+
 import time.Time;
+import useCase.UseCaseable;
 
 
 /**
@@ -30,9 +32,21 @@ public class TestCase implements Runnable
 		isRunning(true);
 		while(isRunning())
 		{
-			useCase.doOneIteration();
+			doOneIterationOrHandleException();
 		}
 		stop();
+	}
+
+	private void doOneIterationOrHandleException()
+	{
+		try
+		{
+			useCase.doOneIteration();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void stop()

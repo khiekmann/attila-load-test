@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
  * Created by HiekmaHe on 17.11.2016.
  *
  */
-public abstract class ConnectionCreate extends ConnectionAbstract
+public abstract class ConnectionCreate extends ConnectionAction
 {
 	public ConnectionCreate(HttpURLConnection httpUrl)
 	{

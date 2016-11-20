@@ -24,6 +24,7 @@ import useCase.UseCaseDummy;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 
@@ -95,5 +96,10 @@ public class MainTest
 		runner.stopRun();
 
 		// assert
+	}
+
+	@Test
+	public void testTimeUnit() {
+		fail("Use Javas Time Unit");
 	}
 }

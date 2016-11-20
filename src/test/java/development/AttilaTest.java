@@ -80,7 +80,8 @@ public class AttilaTest
 	}
 
 	@Test
-	public void testOneIteration() {
+	public void testOneIteration() throws Exception
+	{
 		// arrange
 
 		// act
