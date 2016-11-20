@@ -11,9 +11,12 @@ dependencies {
 	testCompile group: 'junit', name: 'junit', version: '4.11'
 	// http://wiremock.org/docs/getting-started/
 	testCompile "com.github.tomakehurst:wiremock:2.3.1"
+
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
+	// http://wiremock.org/docs/getting-started/
+	compile "com.github.tomakehurst:wiremock:2.3.1"
 
-	// https://mvnrepository.com/artifact/com.github.tomakehurst/wiremock
+// https://mvnrepository.com/artifact/com.github.tomakehurst/wiremock
 //	compile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.3.1'
 }
