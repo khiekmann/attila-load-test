@@ -46,6 +46,7 @@ public class TestCase implements Runnable
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			System.exit(-13);
 		}
 	}
 
