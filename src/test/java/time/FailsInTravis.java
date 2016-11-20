@@ -1,6 +1,5 @@
 package time;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,7 +12,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class FailsInTravis
 {
-	@Ignore
 	@Test
 	public void testFormat_yearBlaBlaSeconds() {
 		// arrange
@@ -26,7 +24,6 @@ public class FailsInTravis
 		assertEquals("1970-01-01-01-00-05", yearBlaBlaSeconds);
 	}
 
-	@Ignore
 	@Test
 	public void testFormat_dateAndNanos() {
 		// arrange
