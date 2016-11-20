@@ -56,6 +56,7 @@ public class MockActuallySendDataTest
 		Thread.sleep(60000);
 	}
 
+	@Ignore
 	@Test
 	public void testSomething() throws Exception
 	{
