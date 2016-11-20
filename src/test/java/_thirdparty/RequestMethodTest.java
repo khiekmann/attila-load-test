@@ -1,4 +1,4 @@
-package connection;
+package _thirdparty;
 
 import org.junit.Test;
 

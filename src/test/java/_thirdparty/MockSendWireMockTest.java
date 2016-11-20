@@ -1,4 +1,4 @@
-package mock;
+package _thirdparty;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,7 +26,7 @@ import static junit.framework.TestCase.assertTrue;
  * 4.) return 202
  * 5.) all else 406 or so
  */
-public class SendWireMockTest
+public class MockSendWireMockTest
 {
 
 	private static int port = 8080;
@@ -68,6 +68,7 @@ public class SendWireMockTest
 		assertTrue("I do not know how to implement this behavior in wiremock", caught406);
 	}
 
+	@Ignore
 	@Test
 	public void testSendPostToMySpecial_responseCode() throws Exception
 	{

@@ -1,4 +1,4 @@
-package development;
+package _development;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -8,11 +8,11 @@ import java.util.List;
 
 import org.junit.*;
 
-import attila.AttilaConnectionCreate;
+import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.Send_Response_Disconnect;
-import connection.Sendable;
-import useCase.UseCaseDummy;
+import send.Sending;
+import send.Sendable;
+import useCase.TestUseCase;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -48,8 +48,8 @@ public class AttilaTest
 		URL url = new URL("http://localhost:" + port + urlPath);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
-		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
-		useCase = new UseCaseDummy(messages, sender);
+		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
+		useCase = new TestUseCase(sender);
 
 		// assert
 		assertEquals("http://localhost:8080/test.txt", url.toString());
@@ -77,16 +77,5 @@ public class AttilaTest
 
 		// assert
 		assertNotNull(useCase);
-	}
-
-	@Test
-	public void testOneIteration() {
-		// arrange
-
-		// act
-		useCase.doOneIteration();
-
-		// assert
-		assertEquals(202, useCase.getResponseCode());
 	}
 }

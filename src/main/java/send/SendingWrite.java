@@ -1,4 +1,4 @@
-package connection;
+package send;
 
 import java.io.IOException;
 
@@ -8,11 +8,11 @@ import java.io.IOException;
  *
  * SRP: Send message
  */
-public class ConnectionSend extends ConnectionAbstract
+public class SendingWrite extends SendingAbstract
 {
-	public ConnectionSend (ConnectionCreate connection, String message) throws IOException
+	public SendingWrite(SendingCreate create, String message) throws IOException
 	{
-		super(connection);
+		super(create);
 		getHttpUrl().getOutputStream().write(message.getBytes());
 		getHttpUrl().getOutputStream().flush();
 		getHttpUrl().getOutputStream().close();

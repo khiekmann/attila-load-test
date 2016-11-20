@@ -1,4 +1,4 @@
-package mock;
+package _thirdparty;
 
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertEquals;
  * 4.) return 202
  * 5.) all else 406 or so
  */
-public class ActuallySendDataTest
+public class MockActuallySendDataTest
 {
 
 	private static int port = 8080;
@@ -56,6 +56,7 @@ public class ActuallySendDataTest
 		Thread.sleep(60000);
 	}
 
+	@Ignore
 	@Test
 	public void testSomething() throws Exception
 	{

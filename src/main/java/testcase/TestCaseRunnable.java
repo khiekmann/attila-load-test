@@ -2,6 +2,8 @@ package testcase;
 
 /**
  * Created by HiekmaHe on 15.11.2016.
+ *
+ * SRP: Threading switch
  */
 public interface TestCaseRunnable
 {

@@ -8,12 +8,12 @@ import java.util.List;
 
 import org.junit.*;
 
-import attila.AttilaConnectionCreate;
+import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.Send_Response_Disconnect;
-import connection.Sendable;
+import send.Sending;
+import send.Sendable;
 import time.Time;
-import useCase.UseCaseDummy;
+import useCase.TestUseCase;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.*;
@@ -29,7 +29,7 @@ public class TestCaseExecutorTest
 			+ "isShutdown: true\n"
 			+ "isTerminated: true\n";
 
-	private UseCaseDummy useCase;
+	private TestUseCase useCase;
 	private DataForTestCase data;
 	private TestCase testCase;
 	private TestCaseExecutor testCaseExecutor;
@@ -60,8 +60,8 @@ public class TestCaseExecutorTest
 		URL url = new URL("http://localhost:" + port + urlPath);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
-		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
-		useCase = new UseCaseDummy(messages, sender);
+		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
+		useCase = new TestUseCase(sender);
 		data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(60);
 		testCase = new TestCase(useCase, data);
@@ -176,10 +176,5 @@ public class TestCaseExecutorTest
 		assertEquals(neitherShutdownNorTerminated, toString1);
 		assertEquals(neitherShutdownNorTerminated, toString2);
 		assertEquals(shutdownAndTerminated, toString3);
-	}
-
-	@Test
-	public void testExecutor() {
-		System.out.println("Implement java.util.concurrent.Executor");
 	}
 }

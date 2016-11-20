@@ -10,12 +10,12 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import attila.AttilaConnectionCreate;
+import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.Send_Response_Disconnect;
-import connection.Sendable;
+import send.Sending;
+import send.Sendable;
 import time.Time;
-import useCase.UseCaseDummy;
+import useCase.TestUseCase;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.assertEquals;
@@ -58,9 +58,9 @@ public class TestCaseRunnable_StartStop_Test
 		String urlPath = "/somewhere";
 		URL url = new URL("http://localhost:" + port + urlPath);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
-		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
+		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
 		httpUrl.setDoOutput(true);
-		UseCaseDummy useCase = new UseCaseDummy(messages, sender);
+		TestUseCase useCase = new TestUseCase(sender);
 		data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(10);
 		testCase = new TestCase(useCase, data);

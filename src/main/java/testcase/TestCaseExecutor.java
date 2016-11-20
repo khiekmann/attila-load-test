@@ -6,6 +6,8 @@ import java.util.concurrent.Executors;
 
 /**
  * Created by HiekmaHe on 15.11.2016.
+ *
+ * SRP: Threading of TestCase using Executor
  */
 public class TestCaseExecutor implements TestCaseRunnable
 {

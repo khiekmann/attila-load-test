@@ -1,4 +1,4 @@
-package development;
+package _development;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -6,24 +6,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 
-import attila.AttilaConnectionCreate;
+import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.Send_Response_Disconnect;
-import connection.Sendable;
+import send.Sending;
+import send.Sendable;
 import testcase.DataForTestCase;
 import testcase.TestCase;
 import testcase.TestCaseExecutor;
 import testcase.TestCaseRunnable;
 import time.Time;
-import useCase.UseCaseDummy;
+import useCase.TestUseCase;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 
@@ -62,7 +60,7 @@ public class MainTest
 	{
 		// arrange
 		URL url = new URL("http://localhost:" + 8080 + onlyPostUrlPath);
-		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
+		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
 
 		// act
 		sender.send("foo");
@@ -82,12 +80,11 @@ public class MainTest
 		URL url = new URL("http://localhost" + urlPath);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
-		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
-		UseCaseable useCase = new UseCaseDummy(messages, sender);
+		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
+		UseCaseable useCase = new TestUseCase(sender);
 		DataForTestCase data = new DataForTestCase();
 		TestCase testCase = new TestCase(useCase, data);
 		TestCaseRunnable runner = new TestCaseExecutor(testCase);
-		boolean unexpectedExceptionThrown = false;
 
 		// act
 		runner.startRun();
@@ -96,4 +93,14 @@ public class MainTest
 
 		// assert
 	}
+
+	@Ignore
+	@Test
+	public void testTimeUnit() {
+		fail("Use Javas Time Unit");
+	}
+
+	@Ignore
+	@Test
+	public void testFuture() {fail("Future in Executor");}
 }

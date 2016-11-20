@@ -5,19 +5,19 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import com.github.tomakehurst.wiremock.http.RequestMethod;
-import connection.ConnectionCreate;
+import send.SendingCreate;
 
 
 /**
  * Created by HiekmaHe on 19.11.2016.
  */
-public class AttilaConnectionCreate extends ConnectionCreate
+public class AttilaSendingCreate extends SendingCreate
 {
 	private URL url;
 
-	public static AttilaConnectionCreate createInstance (URL url) throws IOException
+	public static AttilaSendingCreate createInstance (URL url) throws IOException
 	{
-		return new AttilaConnectionCreate(createHttpUrl(url), url);
+		return new AttilaSendingCreate(createHttpUrl(url), url);
 	}
 
 	private static HttpURLConnection createHttpUrl(URL url) throws IOException
@@ -29,14 +29,14 @@ public class AttilaConnectionCreate extends ConnectionCreate
 		return httpUrl;
 	}
 
-	private AttilaConnectionCreate(HttpURLConnection httpUrl, URL url) {
+	private AttilaSendingCreate(HttpURLConnection httpUrl, URL url) {
 		super(httpUrl);
 		this.url = url;
 	}
 
 	@Override
-	public ConnectionCreate create() throws IOException
+	public SendingCreate create() throws IOException
 	{
-		return AttilaConnectionCreate.createInstance(url);
+		return AttilaSendingCreate.createInstance(url);
 	}
 }
