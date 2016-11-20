@@ -1,4 +1,4 @@
-package learning;
+package _development;
 
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -13,13 +13,13 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import attila.AttilaConnectionCreate;
+import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.Send_Response_Disconnect;
-import connection.Sendable;
+import send.Sending;
+import send.Sendable;
 import testcase.DataForTestCase;
 import testcase.TestCase;
-import useCase.UseCaseDummy;
+import useCase.TestUseCase;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -88,8 +88,8 @@ public class ExecutorTest
 		URL url = new URL("http://localhost:" + port + urlPath);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
-		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
-		UseCaseable useCase = new UseCaseDummy(messages, sender);
+		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
+		UseCaseable useCase = new TestUseCase(sender);
 		DataForTestCase data = new DataForTestCase();
 		Runnable r1 = new TestCase(useCase, data);
 

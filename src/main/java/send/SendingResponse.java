@@ -1,4 +1,4 @@
-package connection;
+package send;
 
 import java.io.IOException;
 
@@ -8,11 +8,11 @@ import java.io.IOException;
  *
  * SRP: Provide responseCode
  */
-public class ConnectionResponse extends ConnectionAction
+public class SendingResponse extends SendingAbstract
 {
 	private int responseCode;
 
-	public ConnectionResponse(ConnectionWrite send) throws IOException
+	public SendingResponse(SendingWrite send) throws IOException
 	{
 		super(send);
 		responseCode = getHttpUrl().getResponseCode();

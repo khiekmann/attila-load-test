@@ -1,4 +1,4 @@
-package mock;
+package _thirdparty;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +16,7 @@ import static junit.framework.TestCase.assertTrue;
 /**
  * Created by HiekmaHe on 13.11.2016.
  */
-public class SendRTMTest_Deactivate
+public class MockSendRTMTest_Deactivate
 {
 
 	private static int port = 8080;

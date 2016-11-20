@@ -3,7 +3,7 @@ package attila;
 import java.io.IOException;
 import java.util.List;
 
-import connection.Sendable;
+import send.Sendable;
 import useCase.UseCaseable;
 
 

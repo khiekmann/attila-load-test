@@ -1,4 +1,4 @@
-package development;
+package _development;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -11,14 +11,14 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import attila.AttilaConnectionCreate;
+import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import connection.Send_Response_Disconnect;
-import connection.Sendable;
+import send.Sending;
+import send.Sendable;
 import testcase.DataForTestCase;
 import testcase.TestCase;
 import testcase.TestCaseExecutor;
-import useCase.UseCaseDummy;
+import useCase.TestUseCase;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.assertTrue;
@@ -54,8 +54,8 @@ public class SendingTest
 		messages.add("C");
 		String urlPath = "/somewhere";
 		URL url = new URL("http://localhost:" + port + urlPath);
-		Sendable sender = new Send_Response_Disconnect(AttilaConnectionCreate.createInstance(url));
-		UseCaseDummy useCase = new UseCaseDummy(messages, sender);
+		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
+		TestUseCase useCase = new TestUseCase(sender);
 		DataForTestCase data = new DataForTestCase();
 		TestCase testCase = new TestCase(useCase, data);
 		testCaseRunnable = new TestCaseExecutor(testCase);

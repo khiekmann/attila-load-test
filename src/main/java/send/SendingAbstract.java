@@ -1,4 +1,4 @@
-package connection;
+package send;
 
 import java.net.HttpURLConnection;
 
@@ -9,16 +9,16 @@ import java.net.HttpURLConnection;
  * SRP: Accessors for HttpURLConnection connection
  *
  */
-public abstract class ConnectionAction
+public abstract class SendingAbstract
 {
 	private HttpURLConnection httpUrl;
 
-	ConnectionAction(ConnectionAction getConnectionable)
+	SendingAbstract(SendingAbstract getConnectionable)
 	{
 		httpUrl = getConnectionable.httpUrl;
 	}
 
-	public ConnectionAction(HttpURLConnection httpUrl)
+	public SendingAbstract(HttpURLConnection httpUrl)
 	{
 		this.httpUrl = httpUrl;
 	}
