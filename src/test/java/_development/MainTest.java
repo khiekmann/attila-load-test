@@ -6,10 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 
 import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
@@ -97,11 +94,13 @@ public class MainTest
 		// assert
 	}
 
+	@Ignore
 	@Test
 	public void testTimeUnit() {
 		fail("Use Javas Time Unit");
 	}
 
+	@Ignore
 	@Test
 	public void testFuture() {fail("Future in Executor");}
 }
