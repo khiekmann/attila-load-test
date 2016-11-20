@@ -3,12 +3,12 @@ package attila;
 import java.io.IOException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 
@@ -28,6 +28,7 @@ public class AttilaUseCaseTest
 		useCase = AttilaTestHelper.createUseCase();
 	}
 
+	@Ignore
 	@Test
 	public void testGetResponse() throws Exception
 	{
