@@ -8,11 +8,14 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    // https://mvnrepository.com/artifact/com.github.tomakehurst/wiremock
-    compile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.3.1'
-    // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
-    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.1'
+	testCompile group: 'junit', name: 'junit', version: '4.11'
+	// http://wiremock.org/docs/getting-started/
+	testCompile "com.github.tomakehurst:wiremock:2.3.1"
+	// https://mvnrepository.com/artifact/io.rest-assured/rest-assured
+	compile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.1'
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
+
+	// https://mvnrepository.com/artifact/com.github.tomakehurst/wiremock
+//	compile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.3.1'
 }
