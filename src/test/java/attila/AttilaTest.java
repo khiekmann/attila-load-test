@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -34,6 +35,7 @@ public class AttilaTest
 		attilaRunner = AttilaTestHelper.createRunner();
 	}
 
+	@Ignore
 	@Test
 	public void doAttila() throws Exception
 	{
