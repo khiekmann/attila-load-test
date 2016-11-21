@@ -23,6 +23,12 @@ public class TestCaseTest
 	@Rule
 	public WireMockClassRule instanceRule = TestWireMockClassRule.createInstance();
 	private TestCase testCase;
+	private String expectedToStringOfTestCase = "DataForTestCase\n"
+			+ "expectedDuration: 5000000000\n"
+			+ "duration: 0\n"
+			+ "timestampEnd: 0\n"
+			+ "timestampStart: 0\n";
+
 
 	@Before
 	public void before() throws IOException
@@ -32,21 +38,14 @@ public class TestCaseTest
 	}
 
 	@Test
-	public void testToString() throws Exception
+	public void testToString_WithoutRunning() throws Exception
 	{
 		// arrange
 
 		// act
-		String toString = testCase.toString();
-		String expected = "ATestCase:\n"
-				+ "DataForTestCase\n"
-				+ "expectedDuration: 0\n"
-				+ "duration: 0\n"
-				+ "timestampEnd: 0\n"
-				+ "timestampStart: 0\n";
 
 		// assert
-		assertEquals(expected, toString);
+		assertEquals(expectedToStringOfTestCase, testCase.toString());
 	}
 
 	@Test
@@ -54,15 +53,9 @@ public class TestCaseTest
 		// arrange
 
 		// act
-		DataForTestCase result = testCase.getResult();
-		String resultToString = "DataForTestCase\n"
-				+ "expectedDuration: 0\n"
-				+ "duration: 0\n"
-				+ "timestampEnd: 0\n"
-				+ "timestampStart: 0\n";
 
 		// assert
-		assertEquals(resultToString, result.toString());
+		assertEquals(expectedToStringOfTestCase, testCase.getResult().toString());
 	}
 
 	@Test

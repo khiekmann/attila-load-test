@@ -10,6 +10,7 @@ import _framework.TestWireMockClassRule;
 import attila.AttilaSendingCreate;
 import send.Sendable;
 import send.Sending;
+import time.Time;
 import useCase.TestUseCase;
 
 
@@ -29,14 +30,21 @@ public class TestCaseTestHelper
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
+		DataForTestCase data = createData();
 		TestUseCase useCase = new TestUseCase(sender);
-		DataForTestCase data = new DataForTestCase();
 		return new TestCase(useCase, data);
 	}
 
-	public static TestCaseRunnable createTestCaseRunner() throws IOException
+	public static TestCaseRunnable createTestCaseRunnable() throws IOException
 	{
 		TestCase testCase = TestCaseTestHelper.createTestCase(TestWireMockClassRule.createURL());
 		return new TestCaseExecutor(testCase);
+	}
+
+	public static DataForTestCase createData()
+	{
+		DataForTestCase data = new DataForTestCase();
+		data.expectedDuration = Time.seconds(5);
+		return data;
 	}
 }

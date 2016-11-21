@@ -30,6 +30,7 @@ public class TestCaseExecutor implements TestCaseRunnable
 	@Override
 	public void startRun()
 	{
+		testCase.setTimestampStart();
 		executor.execute(testCase);
 	}
 
@@ -38,6 +39,13 @@ public class TestCaseExecutor implements TestCaseRunnable
 	{
 		testCase.isRunning(false);
 		executor.shutdown();
+		testCase.setTimestampEnd();
+	}
+
+	@Override
+	public DataForTestCase getResult()
+	{
+		return testCase.getResult();
 	}
 
 	@Override

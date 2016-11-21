@@ -126,4 +126,9 @@ public class Time implements Comparable<Time>
 	{
 		return Time.now().difference(then);
 	}
+
+	public boolean inRange(Time other, Time range)
+	{
+		return this.difference(other).lessThan(range);
+	}
 }

@@ -30,11 +30,16 @@ public class TestCase implements Runnable
 	public void run()
 	{
 		isRunning(true);
-		while(isRunning())
+		while(keepRunning())
 		{
 			doOneIterationOrHandleException();
 		}
 		stop();
+	}
+
+	private boolean keepRunning()
+	{
+		return isRunning();
 	}
 
 	private void doOneIterationOrHandleException()
@@ -52,8 +57,6 @@ public class TestCase implements Runnable
 	public void stop()
 	{
 		isRunning(false);
-		setTimestampEndIfUnset();
-		calcResult();
 	}
 
 	public boolean isRunning()
@@ -76,23 +79,10 @@ public class TestCase implements Runnable
 		result.timestampEnd = data.timestampEnd;
 	}
 
-	private void setTimestampEndIfUnset()
-	{
-		if (isTimestampEndUnset()) {
-			data.timestampEnd = Time.now();
-		}
-	}
-
 	@Override
 	public String toString() {
-		String message = "ATestCase:\n";
-		message += data.toString();
+		String message = data.toString();
    	return message;
-	}
-
-	private boolean isTimestampEndUnset()
-	{
-		return data.timestampEnd.equals(Time.seconds(0));
 	}
 
 	public Time getDuration()
@@ -102,6 +92,17 @@ public class TestCase implements Runnable
 
 	public DataForTestCase getResult()
 	{
+		calcResult();
 		return result;
+	}
+
+	public void setTimestampStart()
+	{
+		data.timestampStart = Time.now();
+	}
+
+	public void setTimestampEnd()
+	{
+		data.timestampEnd = Time.now();
 	}
 }

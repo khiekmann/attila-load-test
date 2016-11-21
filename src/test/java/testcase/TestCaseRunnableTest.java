@@ -11,24 +11,27 @@ import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import time.Time;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotEquals;
+
 
 /**
  * Created by HiekmaHe on 10.11.2016.
  *
  */
-public class TestCaseRunnable_StartStop_Test
+public class TestCaseRunnableTest
 {
 
 	@Rule
 	public WireMockClassRule instanceRule = TestWireMockClassRule.createInstance();
-	private TestCaseRunnable testCaseRunnable;
+	private TestCaseRunnable runner;
 	private DataForTestCase data;
 
 	@Before
 	public void before() throws IOException
 	{
 		instanceRule.stubFor(TestWireMockClassRule.stubFor());
-		testCaseRunnable = TestCaseTestHelper.createTestCaseRunner();
+		data = TestCaseTestHelper.createData();
+		runner = TestCaseTestHelper.createTestCaseRunnable();
 	}
 
 	@Test
@@ -39,9 +42,9 @@ public class TestCaseRunnable_StartStop_Test
 
 		// act
 		Time timestartStamp = Time.now();
-		testCaseRunnable.startRun();
+		runner.startRun();
 		aShort.sleep();
-		testCaseRunnable.stopRun();
+		runner.stopRun();
 		Time duration = Time.elapseSince(timestartStamp);
 
 		// assert
@@ -56,9 +59,9 @@ public class TestCaseRunnable_StartStop_Test
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunnable.startRun();
+		runner.startRun();
 		stopAfter.sleep();
-		testCaseRunnable.stopRun();
+		runner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
@@ -73,7 +76,7 @@ public class TestCaseRunnable_StartStop_Test
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunnable.startRun();
+		runner.startRun();
 		Time duration = Time.elapseSince(timestampStart);
 		Time maxDuration = Time.seconds(2).add(Time.millis(500));
 
@@ -89,9 +92,9 @@ public class TestCaseRunnable_StartStop_Test
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunnable.startRun();
+		runner.startRun();
 		stopAfter.sleep();
-		testCaseRunnable.stopRun();
+		runner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
@@ -106,9 +109,9 @@ public class TestCaseRunnable_StartStop_Test
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunnable.startRun();
+		runner.startRun();
 		stopAfter.sleep();
-		testCaseRunnable.stopRun();
+		runner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
@@ -124,15 +127,16 @@ public class TestCaseRunnable_StartStop_Test
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunnable.startRun();
+		runner.startRun();
 		stopAfter.sleep();
-		testCaseRunnable.stopRun();
+		runner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
-		assertTrue("Run to quick.." + duration + " " + stopAfter, duration.greaterThan(stopAfter));
-		assertTrue("Run takes too long." + testCaseRunnable,   maxDuration.greaterThan(duration));
+		assertTrue("Run to quick. " + duration + " " + stopAfter, duration.greaterThan(stopAfter));
+		assertTrue("Run takes too long. " + maxDuration + " " + duration,   maxDuration.greaterThan(duration));
 	}
+
 
 	@Test
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_TestCaseRunnableNow() throws Exception
@@ -143,12 +147,38 @@ public class TestCaseRunnable_StartStop_Test
 
 		// act
 		Time timestampStart = Time.now();
-		testCaseRunnable.startRun();
+		runner.startRun();
 		stopAfter.sleep();
-		testCaseRunnable.stopRun();
+		runner.stopRun();
 		Time duration = Time.elapseSince(timestampStart);
 
 		// assert
 		assertTrue("Took too long.", maxDuration.greaterThan(duration));
+	}
+
+	@Test
+	public void testGetResult_AfterRunningFor2Seconds() throws Exception
+	{
+		// arrange
+		Time range = Time.millis(300);
+		Time aShort = Time.seconds(2);
+
+		// act
+		Time timestampStartSoon = Time.now();
+		runner.startRun();
+		aShort.sleep();
+		runner.stopRun();
+		Time timestampEndSoon = Time.now();
+		DataForTestCase result = runner.getResult();
+
+		// assert
+		assertNotEquals(Time.ZERO, result.timestampStart);
+		assertTrue(timestampStartSoon.inRange(result.timestampStart, range));
+		assertNotEquals(Time.ZERO, result.timestampEnd);
+		assertTrue(timestampEndSoon.inRange(result.timestampEnd, range));
+		assertNotEquals(Time.ZERO, result.expectedDuration);
+		assertNotEquals(Time.ZERO, result.actualDuration);
+		assertTrue(result.expectedDuration.greaterThan(result.actualDuration));
+		assertTrue(result.actualDuration.greaterThan(aShort));
 	}
 }
