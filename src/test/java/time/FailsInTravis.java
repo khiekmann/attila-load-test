@@ -40,5 +40,4 @@ public class FailsInTravis
 		System.err.println("01 Jan 1970 01:00:05,000" + " - " + dateAndNanos);
 		assertEquals("01 Jan 1970 01:00:05,000", dateAndNanos);
 	}
-
 }

@@ -33,6 +33,7 @@ public class SendingTest
 	private static int port = 8080;
 	@ClassRule public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
 	@Rule public WireMockClassRule instanceRule = wireMockRule;
+	String host = "http://localhost:";
 	private String urlPath = "/cairtmv1d";
 	private URL url;
 	private String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -41,8 +42,6 @@ public class SendingTest
 	@Before
 	public void before() throws Exception
 	{
-		String host = "http://localhost:";
-		url = new URL(host + port + urlPath);
 		stubFor(post(urlEqualTo(urlPath)).willReturn(
 				aResponse()
 						.withStatus(202)
@@ -52,8 +51,7 @@ public class SendingTest
 		messages.add("A");
 		messages.add("B");
 		messages.add("C");
-		String urlPath = "/somewhere";
-		URL url = new URL("http://localhost:" + port + urlPath);
+		url = new URL(host + port + urlPath);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
 		TestUseCase useCase = new TestUseCase(sender);
 		DataForTestCase data = new DataForTestCase();

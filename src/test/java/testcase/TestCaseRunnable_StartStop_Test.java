@@ -1,24 +1,15 @@
 package testcase;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import attila.AttilaSendingCreate;
+import _framework.TestWireMockClassRule;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import send.Sending;
-import send.Sendable;
 import time.Time;
-import useCase.TestUseCase;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 /**
@@ -28,79 +19,33 @@ import static junit.framework.TestCase.assertTrue;
 public class TestCaseRunnable_StartStop_Test
 {
 
-	private DataForTestCase data;
-	private TestCase testCase;
-	private TestCaseRunnable testCaseRunnable;
-
-	private static int port = 8080;
-	@ClassRule
-	public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
 	@Rule
-	public WireMockClassRule instanceRule = wireMockRule;
-	private String host = "http://localhost:";
-	private static URL url;
-	private String urlPath = "/cai/rtm/v1/d";
+	public WireMockClassRule instanceRule = TestWireMockClassRule.createInstance();
+	private TestCaseRunnable testCaseRunnable;
+	private DataForTestCase data;
 
 	@Before
-	public void before() throws Exception
+	public void before() throws IOException
 	{
-		url = new URL(host + port + urlPath);
-		stubFor(post(urlEqualTo(urlPath)).willReturn(
-				aResponse()
-						.withStatus(202)
-				)
-		);
-
-		List<String> messages = new ArrayList<>();
-		messages.add("A");
-		messages.add("B");
-		messages.add("C");
-		String urlPath = "/somewhere";
-		URL url = new URL("http://localhost:" + port + urlPath);
-		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
-		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
-		httpUrl.setDoOutput(true);
-		TestUseCase useCase = new TestUseCase(sender);
-		data = new DataForTestCase();
-		data.expectedDuration = Time.seconds(10);
-		testCase = new TestCase(useCase, data);
-		testCaseRunnable = new TestCaseExecutor(testCase);
+		instanceRule.stubFor(TestWireMockClassRule.stubFor());
+		testCaseRunnable = TestCaseTestHelper.createTestCaseRunner();
 	}
 
 	@Test
 	public void runOutOfTheBox() throws Exception
 	{
 		// arrange
-		Time stopAfter = Time.millis(1500);
 		Time aShort = Time.millis(300);
 
 		// act
 		Time timestartStamp = Time.now();
 		testCaseRunnable.startRun();
 		aShort.sleep();
-		stopAfter.sleep();
 		testCaseRunnable.stopRun();
 		Time duration = Time.elapseSince(timestartStamp);
 
 		// assert
-		System.out.println(duration + " > " + stopAfter);
-		assertTrue("Runs too long.", duration.greaterThan(stopAfter));
-	}
-
-	@Test
-	public void runOutOfTheBox_HandleResult_NotRun() {
-		// arrange
-
-		// act
-		DataForTestCase result = testCase.getResult();
-		String resultToString = "DataForTestCase\n"
-				+ "expectedDuration: 0\n"
-				+ "duration: 0\n"
-				+ "timestampEnd: 0\n"
-				+ "timestampStart: 0\n";
-
-		// assert
-		assertEquals(resultToString, result.toString());
+		assertTrue("Runs too long.", duration.greaterThan(aShort));
 	}
 
 	@Test
@@ -186,7 +131,7 @@ public class TestCaseRunnable_StartStop_Test
 
 		// assert
 		assertTrue("Run to quick.." + duration + " " + stopAfter, duration.greaterThan(stopAfter));
-		assertTrue("Run takes too long." + testCase,   maxDuration.greaterThan(duration));
+		assertTrue("Run takes too long." + testCaseRunnable,   maxDuration.greaterThan(duration));
 	}
 
 	@Test

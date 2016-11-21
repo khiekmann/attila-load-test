@@ -23,6 +23,7 @@ public class TimeConverterTest
 		// assert
 		assertNotNull(converter);
 	}
+
 	@Test
 	public void secondsToNanos() throws Exception
 	{
@@ -41,11 +42,11 @@ public class TimeConverterTest
 	public void nanosToMillis() throws Exception
 	{
 		// arrange
-		long nanos = 1 * 1000 * 1000;
+		long nanos = 1000 * 1000;
 		long expectedMillis = 1;
 
 		// act
-		long millis = TimeConverter.nanosToMillis(1 * 1000 * 1000);
+		long millis = TimeConverter.nanosToMillis(nanos);
 
 		// assert
 		assertEquals(expectedMillis, millis);

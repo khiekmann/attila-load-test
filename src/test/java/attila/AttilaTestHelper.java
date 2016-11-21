@@ -9,9 +9,9 @@ import java.util.List;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import send.SendingCreate;
-import send.Sending;
 import send.Sendable;
+import send.Sending;
+import send.SendingCreate;
 import testcase.DataForTestCase;
 import testcase.TestCase;
 import testcase.TestCaseExecutor;
@@ -41,11 +41,10 @@ public class AttilaTestHelper
 
 	public static MappingBuilder buildMappingInbound()
 	{
-		MappingBuilder builder = wm.post(urlEqualTo(urlPath)).willReturn(
+		return wm.post(urlEqualTo(urlPath)).willReturn(
 				aResponse()
 						.withStatus(202)
 		);
-		return builder;
 	}
 
 	public static int getPort()

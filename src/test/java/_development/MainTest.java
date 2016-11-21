@@ -6,12 +6,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
 
 import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import send.Sending;
 import send.Sendable;
+import send.Sending;
 import testcase.DataForTestCase;
 import testcase.TestCase;
 import testcase.TestCaseExecutor;
@@ -21,7 +24,6 @@ import useCase.TestUseCase;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 
@@ -35,8 +37,8 @@ public class MainTest
 	public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
 	@Rule
 	public WireMockClassRule instanceRule = wireMockRule;
-	private String urlPath = "/somewhere";
-	private String onlyPostUrlPath = "/onlyPost";
+	private String urlPath = "/somewhere/";
+	private String onlyPostUrlPath = "/onlyPost/";
 
 	@Before
 	public void before() {
@@ -77,7 +79,8 @@ public class MainTest
 		messages.add("A");
 		messages.add("B");
 		messages.add("C");
-		URL url = new URL("http://localhost" + urlPath);
+		URL url = new URL("http://localhost" + port + urlPath);
+		System.out.println(url);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
@@ -93,14 +96,4 @@ public class MainTest
 
 		// assert
 	}
-
-	@Ignore
-	@Test
-	public void testTimeUnit() {
-		fail("Use Javas Time Unit");
-	}
-
-	@Ignore
-	@Test
-	public void testFuture() {fail("Future in Executor");}
 }

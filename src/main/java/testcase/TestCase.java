@@ -45,7 +45,7 @@ public class TestCase implements Runnable
 		}
 		catch (IOException e)
 		{
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

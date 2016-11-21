@@ -8,12 +8,12 @@ import java.util.List;
 
 import org.junit.*;
 
-import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import send.Sending;
+import attila.AttilaSendingCreate;
 import send.Sendable;
-import useCase.TestUseCase;
+import send.Sending;
 import useCase.UseCaseable;
+import useCase.TestUseCase;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.assertNotNull;
