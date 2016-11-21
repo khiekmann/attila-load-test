@@ -40,6 +40,10 @@ public class Time implements Comparable<Time>
 		this.timeAmount = timeAmountinNanos;
 	}
 
+	public long getTimeAmountInNanos() {
+		return timeAmount;
+	}
+
 	@Override
 	public int compareTo(Time other)
 	{

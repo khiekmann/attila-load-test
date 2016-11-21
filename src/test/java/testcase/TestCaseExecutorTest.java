@@ -133,20 +133,22 @@ public class TestCaseExecutorTest
 	@Test
 	public void measureHowLongToStop() throws Exception {
 		// arrange
+		Time aShort = Time.millis(200);
+		Time maxDuration = Time.millis(100);
 
 		// act
 		testCaseExecutor.startRun();
-		Thread.sleep(200);
-		testCaseExecutor.stopRun();
+		aShort.sleep();
 		Time timestampStart = Time.now();
-		Time timestampEnd = Time.ZERO;
+		testCaseExecutor.stopRun();
+		Time timestampEnd = Time.now();
 		while(testCaseExecutor.isRunning()) {
 			timestampEnd = Time.now();
 		}
 		Time delta = timestampEnd.difference(timestampStart);
 
 		// assert
-		System.out.println("Stopping took " + delta.toMillis() + " ms.");
+		assertTrue(maxDuration.greaterThan(delta));
 	}
 
 	@Test
