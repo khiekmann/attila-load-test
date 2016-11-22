@@ -6,8 +6,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import _framework.TestWireMockClassRule;
-import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import _framework.Context;
+import _framework.WireMockVanilla;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import time.Time;
 
 import static junit.framework.TestCase.assertTrue;
@@ -21,17 +22,22 @@ import static org.junit.Assert.assertNotEquals;
 public class TestCaseRunnableTest
 {
 
+	private Context context;
+	private WireMockVanilla mock;
 	@Rule
-	public WireMockClassRule instanceRule = TestWireMockClassRule.createInstance();
+	public WireMockRule rule;
 	private TestCaseRunnable runner;
 	private DataForTestCase data;
 
 	@Before
 	public void before() throws IOException
 	{
-		instanceRule.stubFor(TestWireMockClassRule.stubFor());
-		data = TestCaseTestHelper.createData();
-		runner = TestCaseTestHelper.createTestCaseRunnable();
+		context = new Context();
+		mock = new WireMockVanilla();
+		rule = mock.getRule();
+		rule.givenThat(mock.whenAnyRequestReceivedThenReturn200());
+		data = context.getData();
+		runner = context.getTestCaseRunnerVanilla();
 	}
 
 	@Test

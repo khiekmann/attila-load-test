@@ -6,8 +6,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import _framework.TestWireMockClassRule;
-import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import _framework.Context;
+import _framework.WireMockVanilla;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import time.Time;
 
 import static junit.framework.TestCase.assertFalse;
@@ -17,11 +18,15 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Created by HiekmaHe on 13.11.2016.
+ *
+ * SRP:
  */
 public class TestCaseTest
 {
+	private Context context = new Context();
+	public static WireMockVanilla mock = new WireMockVanilla();
 	@Rule
-	public WireMockClassRule instanceRule = TestWireMockClassRule.createInstance();
+	public WireMockRule rule = mock.getRule();
 	private TestCase testCase;
 	private String expectedToStringOfTestCase = "DataForTestCase\n"
 			+ "expectedDuration: 5000000000\n"
@@ -33,27 +38,19 @@ public class TestCaseTest
 	@Before
 	public void before() throws IOException
 	{
-		instanceRule.stubFor(TestWireMockClassRule.stubFor());
-		testCase = TestCaseTestHelper.createTestCase(TestWireMockClassRule.createURL());
+		rule.givenThat(mock.whenAnyRequestReceivedThenReturn200());
+		testCase = context.getTestCaseVanilla();
 	}
 
 	@Test
 	public void testToString_WithoutRunning() throws Exception
 	{
-		// arrange
-
-		// act
-
 		// assert
 		assertEquals(expectedToStringOfTestCase, testCase.toString());
 	}
 
 	@Test
 	public void testGetResult_WithoutRunning() {
-		// arrange
-
-		// act
-
 		// assert
 		assertEquals(expectedToStringOfTestCase, testCase.getResult().toString());
 	}
@@ -61,18 +58,12 @@ public class TestCaseTest
 	@Test
 	public void getDuration() throws Exception
 	{
-		// arrange
-
-		// act
-
 		// assert
 		assertEquals(Time.ZERO, testCase.getDuration());
 	}
 
 	@Test
 	public void isRunning_directAccess() throws Exception {
-		// arrange
-
 		// act
 		boolean isRunning1 = testCase.isRunning();
 		testCase.isRunning(true);

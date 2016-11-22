@@ -7,6 +7,8 @@ import java.util.Vector;
 
 /**
  * Created by HiekmaHe on 20.11.2016.
+ *
+ * SRP: Allow testing of interface
  */
 public class UseCaseableTestHelper
 {

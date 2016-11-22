@@ -9,6 +9,8 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Created by HiekmaHe on 10.11.2016.
+ *
+ * SRP: Tests of time converter class
  */
 public class TimeConverterTest
 {

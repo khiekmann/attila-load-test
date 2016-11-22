@@ -80,7 +80,6 @@ public class MainTest
 		messages.add("B");
 		messages.add("C");
 		URL url = new URL("http://localhost" + port + urlPath);
-		System.out.println(url);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));

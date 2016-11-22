@@ -39,7 +39,11 @@ public class TestCase implements Runnable
 
 	private boolean keepRunning()
 	{
-		return isRunning();
+		if (isRunning) {
+			Time actualDuration = data.timestampStart.difference(Time.now());
+			isRunning = actualDuration.lessThan(data.expectedDuration);
+		}
+		return isRunning;
 	}
 
 	private void doOneIterationOrHandleException()
