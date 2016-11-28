@@ -6,9 +6,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import _framework.Context;
-import _framework.WireMockVanilla;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import _framework.TestHelper;
+import attila.AttilaMockWrapper;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import time.Time;
 
 import static junit.framework.TestCase.assertTrue;
@@ -22,22 +22,16 @@ import static org.junit.Assert.assertNotEquals;
 public class TestCaseRunnableTest
 {
 
-	private Context context;
-	private WireMockVanilla mock;
+	private AttilaMockWrapper mock = new AttilaMockWrapper();
 	@Rule
-	public WireMockRule rule;
+	public WireMockClassRule rule = mock.getWireMockClassRule();
 	private TestCaseRunnable runner;
-	private DataForTestCase data;
 
 	@Before
 	public void before() throws IOException
 	{
-		context = new Context();
-		mock = new WireMockVanilla();
-		rule = mock.getRule();
-		rule.givenThat(mock.whenAnyRequestReceivedThenReturn200());
-		data = context.getData();
-		runner = context.getTestCaseRunnerVanilla();
+		rule.givenThat(mock.receivesAnyRequestThenReturn200TextplainContent());
+		runner = TestHelper.createAttilaRunner();
 	}
 
 	@Test
@@ -78,6 +72,7 @@ public class TestCaseRunnableTest
 	public void runUseCaseFor2Seconds_assertUpperBound() throws Exception
 	{
 		// arrange
+		DataForTestCase data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(2);
 
 		// act
@@ -129,7 +124,7 @@ public class TestCaseRunnableTest
 	{
 		// arrange
 		Time stopAfter = Time.seconds(2);
-		Time maxDuration = data.expectedDuration.add(Time.millis(500));
+		Time maxDuration = Time.seconds(5).add(Time.millis(500));
 
 		// act
 		Time timestampStart = Time.now();
@@ -142,7 +137,6 @@ public class TestCaseRunnableTest
 		assertTrue("Run to quick. " + duration + " " + stopAfter, duration.greaterThan(stopAfter));
 		assertTrue("Run takes too long. " + maxDuration + " " + duration,   maxDuration.greaterThan(duration));
 	}
-
 
 	@Test
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_TestCaseRunnableNow() throws Exception
@@ -182,7 +176,7 @@ public class TestCaseRunnableTest
 		assertTrue(timestampStartSoon.inRange(result.timestampStart, range));
 		assertNotEquals(Time.ZERO, result.timestampEnd);
 		assertTrue(timestampEndSoon.inRange(result.timestampEnd, range));
-		assertNotEquals(Time.ZERO, result.expectedDuration);
+		assertNotEquals(Time.ZERO, result.expectedDuration); // result related
 		assertNotEquals(Time.ZERO, result.actualDuration);
 		assertTrue(result.expectedDuration.greaterThan(result.actualDuration));
 		assertTrue(result.actualDuration.greaterThan(aShort));

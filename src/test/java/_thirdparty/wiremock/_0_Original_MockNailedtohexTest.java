@@ -1,4 +1,4 @@
-package _thirdparty;
+package _thirdparty.wiremock;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * http://www.nailedtothex.org/roller/kyle/entry/articles-test-wiremock
  */
-public class MockNailedtohexTest
+public class _0_Original_MockNailedtohexTest
 {
 
 	private static int PORT = 18089;

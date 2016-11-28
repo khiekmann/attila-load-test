@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import send.RequestMethod;
 import send.SendingCreate;
 
 
@@ -25,7 +24,7 @@ public class AttilaSendingCreate extends SendingCreate
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		httpUrl.setConnectTimeout(0);
-		httpUrl.setRequestMethod(RequestMethod.POST.value());
+		httpUrl.setRequestMethod("POST");
 		return httpUrl;
 	}
 

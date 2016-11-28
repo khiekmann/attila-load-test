@@ -13,13 +13,13 @@ import java.util.Vector;
 public class UseCaseableTestHelper
 {
 	private static Collection<String> holdingExecutedMethodMessages = new Vector<>();
-	private static String doOneIteration = "doOneIteration()";
+	private static String doOneIteration = "executeOnce()";
 
 	public static UseCaseable createUseCaseable() {
 		return new UseCaseable()
 		{
 			@Override
-			public void doOneIteration() throws IOException
+			public void executeOnce() throws IOException
 			{
 				holdingExecutedMethodMessages.add(doOneIteration);
 			}

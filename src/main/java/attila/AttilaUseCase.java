@@ -24,7 +24,7 @@ public class AttilaUseCase implements UseCaseable
 	}
 
 	@Override
-	public void doOneIteration() throws IOException
+	public void executeOnce() throws IOException
 	{
 		sender.send(getMessage());
 	}

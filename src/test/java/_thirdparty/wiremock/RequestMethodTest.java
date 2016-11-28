@@ -1,4 +1,4 @@
-package _thirdparty;
+package _thirdparty.wiremock;
 
 import org.junit.Test;
 

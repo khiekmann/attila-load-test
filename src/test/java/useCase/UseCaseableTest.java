@@ -25,7 +25,7 @@ public class UseCaseableTest
 		// arrange
 
 		// act
-		useCaseable.doOneIteration();
+		useCaseable.executeOnce();
 
 		// assert
 		assertEquals(1,  UseCaseableTestHelper.size());

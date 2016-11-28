@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import _framework.Context;
-import _framework.WireMockAttila;
+import _framework.TestHelper;
+import attila.AttilaMockWrapper;
 import attila.AttilaSendingCreate;
 import attila.AttilaUseCase;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import send.Sendable;
 import send.Sending;
 import send.SendingCreate;
@@ -26,22 +26,20 @@ import static junit.framework.TestCase.assertTrue;
 
 /**
  * Created by HiekmaHe on 16.11.2016.
+ *
+ * SRP:
  */
 public class AttilaTest
 {
-	private Context context;
-	private WireMockAttila mock;
-	@Rule	public WireMockRule rule;
+	private AttilaMockWrapper mock = new AttilaMockWrapper();
+	@Rule	public WireMockClassRule rule = mock.getWireMockClassRule();
 	private TestCaseRunnable runner;
 
 	@Before
 	public void before() throws IOException
 	{
-		context = new Context();
-		mock = new WireMockAttila();
-		rule = mock.getRule();
-		rule.givenThat(mock.whenPostRequestReceivedThenReturn202());
-		runner = context.getAttilaRunner();
+		rule.givenThat(mock.receivesPostRequestWithContent_ThenReturn201());
+		runner = TestHelper.createAttilaRunner();
 	}
 
 	@Test
@@ -66,9 +64,9 @@ public class AttilaTest
 		// arrange
 		DataForTestCase data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(2);
-		SendingCreate attilaConnectionCreate = AttilaSendingCreate.createInstance(mock.getURL());
+		SendingCreate attilaConnectionCreate = AttilaSendingCreate.createInstance(mock.createUrlExitOnException());
 		Sendable attilaSender = new Sending(attilaConnectionCreate);
-		UseCaseable useCase = new AttilaUseCase(context.getMessages(), attilaSender);
+		UseCaseable useCase = new AttilaUseCase(TestHelper.getMessages(), attilaSender);
 		TestCase testCase = new TestCase(useCase, data);
 		TestCaseRunnable runner = new TestCaseExecutor(testCase);
 

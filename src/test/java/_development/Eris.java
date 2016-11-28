@@ -28,7 +28,12 @@ public class Eris
 
 	public static void printThisMethod()
 	{
+		System.out.println(codeLocation());
+	}
+
+	public static String codeLocation()
+	{
 		StackTraceElement element = new Exception().getStackTrace()[1];
-		System.out.println(element.getClassName() + "." + element.getMethodName());
+		return element.getClassName() + "." + element.getMethodName();
 	}
 }

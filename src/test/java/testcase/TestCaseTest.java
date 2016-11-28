@@ -6,9 +6,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import _framework.Context;
-import _framework.WireMockVanilla;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import _framework.TestHelper;
+import attila.AttilaMockWrapper;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import time.Time;
 
 import static junit.framework.TestCase.assertFalse;
@@ -23,10 +23,9 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestCaseTest
 {
-	private Context context = new Context();
-	public static WireMockVanilla mock = new WireMockVanilla();
+	public AttilaMockWrapper mock = new AttilaMockWrapper();
 	@Rule
-	public WireMockRule rule = mock.getRule();
+	public WireMockClassRule rule = mock.getWireMockClassRule();
 	private TestCase testCase;
 	private String expectedToStringOfTestCase = "DataForTestCase\n"
 			+ "expectedDuration: 5000000000\n"
@@ -38,8 +37,8 @@ public class TestCaseTest
 	@Before
 	public void before() throws IOException
 	{
-		rule.givenThat(mock.whenAnyRequestReceivedThenReturn200());
-		testCase = context.getTestCaseVanilla();
+		rule.givenThat(mock.receivesAnyRequestThenReturn200TextplainContent());
+		testCase = TestHelper.createAttilaTestCase();
 	}
 
 	@Test
@@ -86,8 +85,9 @@ public class TestCaseTest
 		boolean isRunning1 = testCase.isRunning();
 		boolean isAlive1 = thread.isAlive();
 
+		testCase.timestampStartNow();
 		thread.start();
-		Time.millis(300).sleep();
+		Time.millis(500).sleep();
 
 		boolean isRunning2 = testCase.isRunning();
 		boolean isAlive2 = thread.isAlive();

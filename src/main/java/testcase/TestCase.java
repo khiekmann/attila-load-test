@@ -50,7 +50,7 @@ public class TestCase implements Runnable
 	{
 		try
 		{
-			useCase.doOneIteration();
+			useCase.executeOnce();
 		}
 		catch (IOException e)
 		{
@@ -100,12 +100,12 @@ public class TestCase implements Runnable
 		return result;
 	}
 
-	public void setTimestampStart()
+	public void timestampStartNow()
 	{
 		data.timestampStart = Time.now();
 	}
 
-	public void setTimestampEnd()
+	public void timestampStartEnd()
 	{
 		data.timestampEnd = Time.now();
 	}

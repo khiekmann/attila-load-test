@@ -1,34 +1,34 @@
 package attila;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import _framework.Context;
-import _framework.WireMockAttila;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import _framework.TestHelper;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 
 import static org.junit.Assert.assertEquals;
 
 
 /**
  * Created by HiekmaHe on 20.11.2016.
+ *
+ * SRP: Tests for use case attila.
  */
 public class AttilaUseCaseTest
 {
-	private Context context;
-	private WireMockAttila mock;
-	@Rule	public WireMockRule rule;
+	private AttilaMockWrapper mock = new AttilaMockWrapper();
+	@Rule	public WireMockClassRule rule = mock.getWireMockClassRule();
 	private AttilaUseCase useCase;
 
 	@Before
 	public void before() throws IOException
 	{
-		context = new Context();
-		rule.givenThat(mock.whenPostRequestReceivedThenReturn202());
-		useCase = context.getAttilaUseCase();
+		rule.givenThat(mock.receivesPostRequestWithContent_ThenReturn201());
+		useCase = TestHelper.createAttilaUseCase();
 	}
 
 	@Test
@@ -37,9 +37,9 @@ public class AttilaUseCaseTest
 		// arrange
 
 		// act
-		useCase.doOneIteration();
+		useCase.executeOnce();
 
 		// assert
-		assertEquals(202, useCase.getResponseCode());
+		assertEquals(HttpURLConnection.HTTP_ACCEPTED, useCase.getResponseCode());
 	}
 }

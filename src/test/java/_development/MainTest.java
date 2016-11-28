@@ -20,7 +20,7 @@ import testcase.TestCase;
 import testcase.TestCaseExecutor;
 import testcase.TestCaseRunnable;
 import time.Time;
-import useCase.TestUseCase;
+import useCase.UseCaseExample;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -83,7 +83,7 @@ public class MainTest
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
-		UseCaseable useCase = new TestUseCase(sender);
+		UseCaseable useCase = new UseCaseExample(sender);
 		DataForTestCase data = new DataForTestCase();
 		TestCase testCase = new TestCase(useCase, data);
 		TestCaseRunnable runner = new TestCaseExecutor(testCase);

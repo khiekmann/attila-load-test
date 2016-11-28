@@ -13,7 +13,7 @@ import attila.AttilaSendingCreate;
 import send.Sendable;
 import send.Sending;
 import time.Time;
-import useCase.TestUseCase;
+import useCase.UseCaseExample;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.*;
@@ -29,7 +29,7 @@ public class TestCaseExecutorTest
 			+ "isShutdown: true\n"
 			+ "isTerminated: true\n";
 
-	private TestUseCase useCase;
+	private UseCaseExample useCase;
 	private DataForTestCase data;
 	private TestCase testCase;
 	private TestCaseExecutor testCaseExecutor;
@@ -61,7 +61,7 @@ public class TestCaseExecutorTest
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
-		useCase = new TestUseCase(sender);
+		useCase = new UseCaseExample(sender);
 		data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(60);
 		testCase = new TestCase(useCase, data);
