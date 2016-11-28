@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
@@ -125,13 +122,16 @@ public class MockWrapper
 
 	private String readPage(URL url) throws IOException
 	{
-		String readPage;
-		URLConnection conn = url.openConnection();
-		InputStreamReader inputStreamReader = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
-		try (BufferedReader reader = new BufferedReader(inputStreamReader))
-		{
-			readPage = reader.lines().collect(Collectors.joining(newline));
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		InputStreamReader inpustStreamReader = new InputStreamReader(connection.getInputStream());
+		BufferedReader reader = new BufferedReader(inpustStreamReader);
+
+		StringBuilder stringBuilder = new StringBuilder();
+		String readLine;
+		while ((readLine = reader.readLine()) != null) {
+			stringBuilder.append(readLine);
 		}
-		return readPage;
+		reader.close();
+		return stringBuilder.toString();
 	}
 }
