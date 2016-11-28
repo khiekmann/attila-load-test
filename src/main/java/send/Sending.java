@@ -1,6 +1,7 @@
 package send;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 
 /**
@@ -21,11 +22,15 @@ public class Sending implements Sendable
 	@Override
 	public void send(String message) throws IOException
 	{
-		SendingCreate create = creator.create();
-		SendingWrite write = new SendingWrite(create, message);
-		SendingResponse response = new SendingResponse(write);
-		responseCode = response.code();
-		new SendingDisconnect(response);
+		try {
+			SendingCreate create = creator.create();
+			SendingWrite write = new SendingWrite(create, message);
+			SendingResponse response = new SendingResponse(write);
+			responseCode = response.code();
+			new SendingDisconnect(response);
+		} catch (ConnectException e) {
+			throw new ConnectException(e.getMessage() + "\n" + creator.getHttpUrl());
+		}
 	}
 
 	@Override

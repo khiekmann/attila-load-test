@@ -12,4 +12,6 @@ public interface TestCaseRunnable
 	void startRun();
 
 	void stopRun() throws InterruptedException;
+
+	DataForTestCase getResult();
 }

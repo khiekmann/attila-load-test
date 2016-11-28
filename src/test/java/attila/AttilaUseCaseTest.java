@@ -1,44 +1,45 @@
 package attila;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import _framework.TestHelper;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 
 import static org.junit.Assert.assertEquals;
 
 
 /**
  * Created by HiekmaHe on 20.11.2016.
+ *
+ * SRP: Tests for use case attila.
  */
 public class AttilaUseCaseTest
 {
-	@Rule
-	public WireMockRule wireMockRule = AttilaTestHelper.wireMockRule();
+	private AttilaMockWrapper mock = new AttilaMockWrapper();
+	@Rule	public WireMockClassRule rule = mock.getWireMockClassRule();
 	private AttilaUseCase useCase;
 
 	@Before
 	public void before() throws IOException
 	{
-		wireMockRule.stubFor(AttilaTestHelper.buildMappingInbound());
-		useCase = AttilaTestHelper.createUseCase();
+		rule.givenThat(mock.receivesPostRequestWithContent_ThenReturn201());
+		useCase = TestHelper.createAttilaUseCase();
 	}
 
-	@Ignore
 	@Test
 	public void testGetResponse() throws Exception
 	{
 		// arrange
 
 		// act
-		AttilaUseCase useCase = AttilaTestHelper.createUseCase();
-		useCase.doOneIteration();
+		useCase.executeOnce();
 
 		// assert
-		assertEquals(202, useCase.getResponseCode());
+		assertEquals(HttpURLConnection.HTTP_ACCEPTED, useCase.getResponseCode());
 	}
 }

@@ -16,7 +16,25 @@ public class SendableTestHelper
 	private static Collection<String> holdingExecutedMethodMessages = new Vector<>();
 	private static String sendStringMessage= "send(String message)";
 
-	public static Sendable createSendable()
+	public static Sendable createFakeSender()
+	{
+		return new Sendable()
+		{
+			@Override
+			public void send(String message) throws IOException
+			{
+				holdingExecutedMethodMessages.add(sendStringMessage);
+			}
+
+			@Override
+			public int getResponseCode()
+			{
+				return 0;
+			}
+		};
+	}
+
+	public static Sendable createAttilaSender()
 	{
 		return new Sendable()
 		{

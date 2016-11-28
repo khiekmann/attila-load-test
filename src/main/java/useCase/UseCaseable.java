@@ -8,7 +8,7 @@ import java.io.IOException;
  */
 public interface UseCaseable
 {
-	void doOneIteration() throws IOException;
+	void executeOnce() throws IOException;
 
 	int getResponseCode();
 }

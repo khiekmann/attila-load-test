@@ -25,4 +25,15 @@ public class Eris
 	{
 		thread.interrupt();
 	}
+
+	public static void printThisMethod()
+	{
+		System.out.println(codeLocation());
+	}
+
+	public static String codeLocation()
+	{
+		StackTraceElement element = new Exception().getStackTrace()[1];
+		return element.getClassName() + "." + element.getMethodName();
+	}
 }

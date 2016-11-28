@@ -8,12 +8,12 @@ import java.util.List;
 
 import org.junit.*;
 
-import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import send.Sending;
+import attila.AttilaSendingCreate;
 import send.Sendable;
+import send.Sending;
 import time.Time;
-import useCase.TestUseCase;
+import useCase.UseCaseExample;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.*;
@@ -29,7 +29,7 @@ public class TestCaseExecutorTest
 			+ "isShutdown: true\n"
 			+ "isTerminated: true\n";
 
-	private TestUseCase useCase;
+	private UseCaseExample useCase;
 	private DataForTestCase data;
 	private TestCase testCase;
 	private TestCaseExecutor testCaseExecutor;
@@ -61,7 +61,7 @@ public class TestCaseExecutorTest
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
-		useCase = new TestUseCase(sender);
+		useCase = new UseCaseExample(sender);
 		data = new DataForTestCase();
 		data.expectedDuration = Time.seconds(60);
 		testCase = new TestCase(useCase, data);
@@ -133,20 +133,22 @@ public class TestCaseExecutorTest
 	@Test
 	public void measureHowLongToStop() throws Exception {
 		// arrange
+		Time aShort = Time.millis(200);
+		Time maxDuration = Time.millis(100);
 
 		// act
 		testCaseExecutor.startRun();
-		Thread.sleep(200);
-		testCaseExecutor.stopRun();
+		aShort.sleep();
 		Time timestampStart = Time.now();
-		Time timestampEnd = Time.ZERO;
+		testCaseExecutor.stopRun();
+		Time timestampEnd = Time.now();
 		while(testCaseExecutor.isRunning()) {
 			timestampEnd = Time.now();
 		}
 		Time delta = timestampEnd.difference(timestampStart);
 
 		// assert
-		System.out.println("Stopping took " + delta.toMillis() + " ms.");
+		assertTrue(maxDuration.greaterThan(delta));
 	}
 
 	@Test

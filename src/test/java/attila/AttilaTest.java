@@ -1,19 +1,21 @@
 package attila;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import _framework.TestHelper;
+import _thirdparty.wiremock.MockWrapper;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import testcase.TestCaseRunnable;
 import time.Time;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static com.github.tomakehurst.wiremock.client.WireMock.givenThat;
 import static org.junit.Assert.assertEquals;
 
 
@@ -24,32 +26,34 @@ import static org.junit.Assert.assertEquals;
  */
 public class AttilaTest
 {
-	@Rule
-	public WireMockRule wireMockRule = new WireMockRule(options().port(AttilaTestHelper.getPort()), false);
-	private TestCaseRunnable attilaRunner;
+	private MockWrapper mock = new AttilaMockWrapper();
+	@Rule public WireMockClassRule rule = mock.getWireMockClassRule();
+	private TestCaseRunnable runner;
 
 	@Before
 	public void before() throws IOException
 	{
-		wireMockRule.stubFor(AttilaTestHelper.buildMappingInbound());
-		attilaRunner = AttilaTestHelper.createRunner();
+		givenThat(mock.receivesPostRequestWithContent_ThenReturn201());
+		givenThat(mock.receivesPostRequestNoContent_ThenReturn406());
+		givenThat(mock.receivesGetRequest_ThenReturn406());
+
+		runner = TestHelper.createAttilaRunner();
 	}
 
-	@Ignore
 	@Test
-	public void doAttila() throws Exception
+	public void runFor3Seconds() throws Exception
 	{
 		// arrange
 
 		// act
-		attilaRunner.startRun();
+		runner.startRun();
 		Time.seconds(3).sleep();
-		attilaRunner.stopRun();
+		runner.stopRun();
 
 		// assert
-		List<ServeEvent> allServeEvents = wireMockRule.getAllServeEvents();
+		List<ServeEvent> allServeEvents = rule.getAllServeEvents();
 		for (ServeEvent aEvent : allServeEvents) {
-			assertEquals(202, aEvent.getResponse().getStatus());
+			assertEquals(HttpURLConnection.HTTP_ACCEPTED, aEvent.getResponse().getStatus());
 		}
 	}
 }

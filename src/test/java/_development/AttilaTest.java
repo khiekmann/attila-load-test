@@ -1,81 +1,86 @@
 package _development;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
+import _framework.TestHelper;
+import attila.AttilaMockWrapper;
 import attila.AttilaSendingCreate;
+import attila.AttilaUseCase;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import send.Sending;
 import send.Sendable;
-import useCase.TestUseCase;
+import send.Sending;
+import send.SendingCreate;
+import testcase.DataForTestCase;
+import testcase.TestCase;
+import testcase.TestCaseExecutor;
+import testcase.TestCaseRunnable;
+import time.Time;
 import useCase.UseCaseable;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 
 /**
  * Created by HiekmaHe on 16.11.2016.
+ *
+ * SRP:
  */
 public class AttilaTest
 {
-	private static int port = 8080;
-	@ClassRule public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
-	@Rule	public WireMockClassRule instanceRule = wireMockRule;
-
-	private UseCaseable useCase;
-	private String urlPath = "/test.txt";
+	private AttilaMockWrapper mock = new AttilaMockWrapper();
+	@Rule	public WireMockClassRule rule = mock.getWireMockClassRule();
+	private TestCaseRunnable runner;
 
 	@Before
 	public void before() throws IOException
 	{
-		stubFor(post(urlEqualTo(urlPath)).willReturn(
-				aResponse()
-						.withStatus(202)
-				)
-		);
-
-		List<String> messages = new ArrayList<>();
-		messages.add("A");
-		messages.add("B");
-		messages.add("C");
-		URL url = new URL("http://localhost:" + port + urlPath);
-		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
-		httpUrl.setDoOutput(true);
-		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
-		useCase = new TestUseCase(sender);
-
-		// assert
-		assertEquals("http://localhost:8080/test.txt", url.toString());
+		rule.givenThat(mock.receivesPostRequestWithContent_ThenReturn201());
+		runner = TestHelper.createAttilaRunner();
 	}
 
-	@Ignore
 	@Test
-	public void testWiremockManually() throws Exception
+	public void stopAfter2Seconds() throws Exception
 	{
 		// arrange
+		Time aShort = Time.seconds(2);
+		Time range = Time.millis(200);
 
 		// act
-		System.out.println("start...");
-		Thread.sleep(60000);
+		runner.startRun();
+		aShort.sleep();
+		runner.stopRun();
 
-		System.out.println("end...");
 		// assert
+		assertTrue(runner.getResult().actualDuration.inRange(aShort, range));
 	}
 
 	@Test
-	public void testCreation() {
+	public void runForExpectedDurationStopOneself() throws Exception
+	{
 		// arrange
+		DataForTestCase data = new DataForTestCase();
+		data.expectedDuration = Time.seconds(2);
+		SendingCreate attilaConnectionCreate = AttilaSendingCreate.createInstance(mock.createUrlExitOnException());
+		Sendable attilaSender = new Sending(attilaConnectionCreate);
+		UseCaseable useCase = new AttilaUseCase(TestHelper.getMessages(), attilaSender);
+		TestCase testCase = new TestCase(useCase, data);
+		TestCaseRunnable runner = new TestCaseExecutor(testCase);
 
 		// act
+		boolean isNotRunningYet = ! runner.isRunning();
+		runner.startRun();
+		Time.millis(1000).sleep();
+		boolean isRunning = runner.isRunning();
+		Time.seconds(3).sleep();
+		boolean stoppedRunning = ! runner.isRunning();
 
 		// assert
-		assertNotNull(useCase);
+		assertTrue(isNotRunningYet);
+		assertTrue(isRunning);
+		assertTrue(stoppedRunning);
 	}
 }

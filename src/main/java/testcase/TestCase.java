@@ -30,30 +30,37 @@ public class TestCase implements Runnable
 	public void run()
 	{
 		isRunning(true);
-		while(isRunning())
+		while(keepRunning())
 		{
 			doOneIterationOrHandleException();
 		}
 		stop();
 	}
 
+	private boolean keepRunning()
+	{
+		if (isRunning) {
+			Time actualDuration = data.timestampStart.difference(Time.now());
+			isRunning = actualDuration.lessThan(data.expectedDuration);
+		}
+		return isRunning;
+	}
+
 	private void doOneIterationOrHandleException()
 	{
 		try
 		{
-			useCase.doOneIteration();
+			useCase.executeOnce();
 		}
 		catch (IOException e)
 		{
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
 	public void stop()
 	{
 		isRunning(false);
-		setTimestampEndIfUnset();
-		calcResult();
 	}
 
 	public boolean isRunning()
@@ -76,23 +83,10 @@ public class TestCase implements Runnable
 		result.timestampEnd = data.timestampEnd;
 	}
 
-	private void setTimestampEndIfUnset()
-	{
-		if (isTimestampEndUnset()) {
-			data.timestampEnd = Time.now();
-		}
-	}
-
 	@Override
 	public String toString() {
-		String message = "ATestCase:\n";
-		message += data.toString();
+		String message = data.toString();
    	return message;
-	}
-
-	private boolean isTimestampEndUnset()
-	{
-		return data.timestampEnd.equals(Time.seconds(0));
 	}
 
 	public Time getDuration()
@@ -102,6 +96,17 @@ public class TestCase implements Runnable
 
 	public DataForTestCase getResult()
 	{
+		calcResult();
 		return result;
+	}
+
+	public void timestampStartNow()
+	{
+		data.timestampStart = Time.now();
+	}
+
+	public void timestampStartEnd()
+	{
+		data.timestampEnd = Time.now();
 	}
 }

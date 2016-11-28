@@ -40,6 +40,10 @@ public class Time implements Comparable<Time>
 		this.timeAmount = timeAmountinNanos;
 	}
 
+	public long getTimeAmountInNanos() {
+		return timeAmount;
+	}
+
 	@Override
 	public int compareTo(Time other)
 	{
@@ -125,5 +129,10 @@ public class Time implements Comparable<Time>
 	public static Time elapseSince(Time then)
 	{
 		return Time.now().difference(then);
+	}
+
+	public boolean inRange(Time other, Time range)
+	{
+		return this.difference(other).lessThan(range);
 	}
 }

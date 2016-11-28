@@ -9,6 +9,8 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Created by HiekmaHe on 20.11.2016.
+ *
+ * SRP:
  */
 public class SendableTest
 {
@@ -16,7 +18,7 @@ public class SendableTest
 
 	@Before
 	public void before() {
-		sendable = SendableTestHelper.createSendable();
+		sendable = SendableTestHelper.createFakeSender();
 	}
 
 	@Test

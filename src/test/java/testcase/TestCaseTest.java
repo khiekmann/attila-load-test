@@ -1,24 +1,16 @@
 package testcase;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import attila.AttilaSendingCreate;
+import _framework.TestHelper;
+import attila.AttilaMockWrapper;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import send.Sending;
-import send.Sendable;
 import time.Time;
-import useCase.TestUseCase;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -26,112 +18,51 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Created by HiekmaHe on 13.11.2016.
+ *
+ * SRP:
  */
 public class TestCaseTest
 {
-
-	TestUseCase useCase;
-	DataForTestCase data;
-	TestCase testCase;
-
-	private static int port = 8080;
-	@ClassRule
-	public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
+	public AttilaMockWrapper mock = new AttilaMockWrapper();
 	@Rule
-	public WireMockClassRule instanceRule = wireMockRule;
-	private String host = "http://localhost:";
-	private static URL url;
-	private String urlPath = "/cai/rtm/v1/d";
+	public WireMockClassRule rule = mock.getWireMockClassRule();
+	private TestCase testCase;
+	private String expectedToStringOfTestCase = "DataForTestCase\n"
+			+ "expectedDuration: 5000000000\n"
+			+ "duration: 0\n"
+			+ "timestampEnd: 0\n"
+			+ "timestampStart: 0\n";
+
 
 	@Before
 	public void before() throws IOException
 	{
-		url = new URL(host + port + urlPath);
-		stubFor(post(urlEqualTo(urlPath)).willReturn(
-				aResponse()
-						.withStatus(202)
-				)
-		);
-
-		List<String> messages = new ArrayList<>();
-		messages.add("A");
-		messages.add("B");
-		messages.add("C");
-		String urlPath = "/somewhere";
-		URL url = new URL("http://localhost:" + port + urlPath);
-		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
-		httpUrl.setDoOutput(true);
-		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
-		useCase = new TestUseCase(sender);
-		data = new DataForTestCase();
-		testCase = new TestCase(useCase, data);
-	}
-
-//	@Test
-	public void run() throws Exception
-	{
-		// arrange
-
-		// act
-		testCase.run();
-		Thread.sleep(1000);
-		testCase.stop();
-
-		// assert
-	}
-
-//	@Test
-	public void stop() throws Exception
-	{
-		// arrange
-
-		// act
-		boolean isRunning1 = testCase.isRunning();
-		testCase.run();
-		boolean isRunning2 = testCase.isRunning();
-		testCase.stop();
-		boolean isRunning3 = testCase.isRunning();
-
-		// assert
-		assertEquals(false, isRunning1);
-		assertEquals(true, isRunning2);
-		assertEquals(false, isRunning3);
+		rule.givenThat(mock.receivesAnyRequestThenReturn200TextplainContent());
+		testCase = TestHelper.createAttilaTestCase();
 	}
 
 	@Test
-	public void testToString() throws Exception
+	public void testToString_WithoutRunning() throws Exception
 	{
-		// arrange
-
-		// act
-		String toString = testCase.toString();
-		String expected = "ATestCase:\n"
-				+ "DataForTestCase\n"
-				+ "expectedDuration: 0\n"
-				+ "duration: 0\n"
-				+ "timestampEnd: 0\n"
-				+ "timestampStart: 0\n";
-
 		// assert
-		assertEquals(expected, toString);
+		assertEquals(expectedToStringOfTestCase, testCase.toString());
+	}
+
+	@Test
+	public void testGetResult_WithoutRunning() {
+		// assert
+		assertEquals(expectedToStringOfTestCase, testCase.getResult().toString());
 	}
 
 	@Test
 	public void getDuration() throws Exception
 	{
-		// arrange
-
-		// act
-		Time duration = testCase.getDuration();
-
 		// assert
-		assertEquals(Time.ZERO, duration);
+		assertEquals(Time.ZERO, testCase.getDuration());
 	}
 
 	@Test
 	public void isRunning_directAccess() throws Exception {
-		// arrange
-
 		// act
 		boolean isRunning1 = testCase.isRunning();
 		testCase.isRunning(true);
@@ -148,29 +79,31 @@ public class TestCaseTest
 	@Test
 	public void isRunning_accessByRunning() throws Exception {
 		// arrange
+		Thread thread = new Thread(testCase);
 
 		// act
 		boolean isRunning1 = testCase.isRunning();
+		boolean isAlive1 = thread.isAlive();
 
-		Thread thread = new Thread(
-			new Runnable() {
-				@Override
-				public void run()
-				{
-					testCase.run();
-				}
-			}
-		);
+		testCase.timestampStartNow();
 		thread.start();
-		Thread.sleep(500);
+		Time.millis(500).sleep();
+
 		boolean isRunning2 = testCase.isRunning();
+		boolean isAlive2 = thread.isAlive();
+
 		testCase.isRunning(false);
+		Time.millis(500).sleep();
+
 		boolean isRunning3 = testCase.isRunning();
-		testCase.isRunning(false);
+		boolean isAlive3 = thread.isAlive();
 
 		// assert
 		assertFalse(isRunning1);
+		assertFalse(isAlive1);
 		assertTrue(isRunning2);
+		assertTrue(isAlive2);
 		assertFalse(isRunning3);
+		assertFalse(isAlive3);
 	}
 }
