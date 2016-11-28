@@ -52,9 +52,7 @@ public class AttilaTest
 
 		// assert
 		List<ServeEvent> allServeEvents = rule.getAllServeEvents();
-		int i = 0;
 		for (ServeEvent aEvent : allServeEvents) {
-			System.out.println(i++);
 			assertEquals(HttpURLConnection.HTTP_ACCEPTED, aEvent.getResponse().getStatus());
 		}
 	}
