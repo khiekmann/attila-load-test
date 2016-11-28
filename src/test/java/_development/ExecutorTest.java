@@ -31,7 +31,7 @@ public class ExecutorTest
 	@Test
 	public void testExecutor() throws Exception{
 		// arrange
-		StringBuilder aSB = new StringBuilder();
+		final StringBuilder aSB = new StringBuilder();
 		Runnable r1 = new Runnable() {
 			@Override public void run() {
 				aSB.append("A1 " + Thread.currentThread() + "\n" );
