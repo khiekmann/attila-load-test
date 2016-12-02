@@ -9,7 +9,7 @@ import org.junit.Test;
  *
  * SRP: As soon as usecase for attila is done, this is its test
  */
-public class MockSendingPerAttilaUseCase
+public class MockSendingUsingAttilaUseCase
 {
 
 	@Ignore("Test sending Attila responseMessage using Attila classes not implemented")
