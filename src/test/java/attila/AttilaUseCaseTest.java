@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class AttilaUseCaseTest
 {
+
 	private AttilaMockWrapper mock = new AttilaMockWrapper();
 	@Rule	public WireMockClassRule rule = mock.getWireMockClassRule();
 	private AttilaUseCase useCase;

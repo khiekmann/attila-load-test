@@ -21,7 +21,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
  */
 public class MockWrapper
 {
-	private static String host = "http://localhost";
+	private static String host = "http://0.0.0.0";
 	private static String newline = System.getProperty("line.separator");
 
 	private int port;
