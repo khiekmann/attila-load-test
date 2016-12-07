@@ -15,10 +15,10 @@ import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import send.Sendable;
 import send.Sending;
-import testcase.DataForTestCase;
-import testcase.TestCase;
-import testcase.TestCaseExecutor;
-import testcase.TestCaseRunnable;
+import testCase.DataForTestCase;
+import testCase.TestCase;
+import testCase.TestCaseExecutor;
+import testCase.TestCaseRunnable;
 import time.Time;
 import useCase.UseCaseExample;
 import useCase.UseCaseable;
@@ -61,7 +61,7 @@ public class _2_Original_Wiremock
 	public void testPostRequestMethod() throws Exception
 	{
 		// arrange
-		URL url = new URL("http://localhost:" + 8080 + onlyPostUrlPath);
+		URL url = new URL("http://0.0.0.0:" + 8080 + onlyPostUrlPath);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
 
 		// act
@@ -79,7 +79,7 @@ public class _2_Original_Wiremock
 		messages.add("A");
 		messages.add("B");
 		messages.add("C");
-		URL url = new URL("http://localhost" + port + urlPath);
+		URL url = new URL("http://0.0.0.0" + port + urlPath);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));

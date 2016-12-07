@@ -7,11 +7,9 @@ import java.util.List;
 
 import attila.AttilaSendingCreate;
 import attila.AttilaUseCase;
-import send.Sendable;
-import send.Sending;
-import testcase.DataForTestCase;
-import testcase.TestCase;
-import testcase.TestCaseExecutor;
+import testCase.DataForTestCase;
+import testCase.TestCase;
+import testCase.TestCaseExecutor;
 
 
 /**
@@ -21,7 +19,7 @@ public class SendingTestHelper
 {
 
 	private static int port = 8080;
-	private static String host = "http://localhost";
+	private static String host = "http://0.0.0.0";
 	private static String urlPath = "/cai/rtm/v1/d/";
 	private static TestCase testCase;
 	private static AttilaUseCase attilaUseCase;

@@ -11,10 +11,10 @@ import org.junit.Rule;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import send.Sendable;
 import send.Sending;
-import testcase.DataForTestCase;
-import testcase.TestCase;
-import testcase.TestCaseExecutor;
-import testcase.TestCaseRunnable;
+import testCase.DataForTestCase;
+import testCase.TestCase;
+import testCase.TestCaseExecutor;
+import testCase.TestCaseRunnable;
 import useCase.UseCaseable;
 
 

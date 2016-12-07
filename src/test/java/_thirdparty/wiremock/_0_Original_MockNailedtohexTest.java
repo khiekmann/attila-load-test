@@ -37,7 +37,7 @@ public class _0_Original_MockNailedtohexTest
 
 	@Test
 	public void ok() throws Exception {
-		String actual = readAdminPage("http://localhost:18089/hoge.txt");
+		String actual = readAdminPage("http://0.0.0.0:18089/hoge.txt");
 		String expected = "hoge";
 		assertThat(actual, is(expected));
 	}

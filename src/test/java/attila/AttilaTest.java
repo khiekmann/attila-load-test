@@ -1,8 +1,6 @@
 package attila;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,20 +8,18 @@ import org.junit.Test;
 
 import _framework.TestHelper;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import send.Sendable;
 import send.Sending;
 import send.SendingCreate;
-import testcase.DataForTestCase;
-import testcase.TestCase;
-import testcase.TestCaseExecutor;
-import testcase.TestCaseRunnable;
+import testCase.DataForTestCase;
+import testCase.TestCase;
+import testCase.TestCaseExecutor;
+import testCase.TestCaseRunnable;
 import time.Time;
 import useCase.UseCaseable;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.givenThat;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -47,22 +43,7 @@ public class AttilaTest
 		runner = TestHelper.createAttilaRunner();
 	}
 
-	@Test
-	public void runFor3Seconds() throws Exception
-	{
-		// arrange
 
-		// act
-		runner.startRun();
-		Time.seconds(3).sleep();
-		runner.stopRun();
-
-		// assert
-		List<ServeEvent> allServeEvents = rule.getAllServeEvents();
-		for (ServeEvent aEvent : allServeEvents) {
-			assertEquals(HttpURLConnection.HTTP_ACCEPTED, aEvent.getResponse().getStatus());
-		}
-	}
 
 	@Test
 	public void stopAfter2Seconds() throws Exception

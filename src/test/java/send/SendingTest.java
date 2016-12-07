@@ -7,7 +7,7 @@ import org.junit.Test;
 import _framework.TestHelper;
 import attila.AttilaMockWrapper;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import testcase.TestCaseRunnable;
+import testCase.TestCaseRunnable;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
