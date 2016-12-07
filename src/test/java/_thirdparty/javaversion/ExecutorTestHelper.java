@@ -1,4 +1,4 @@
-package _development;
+package _thirdparty.javaversion;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

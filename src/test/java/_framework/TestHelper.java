@@ -54,4 +54,10 @@ public class TestHelper
 		data.expectedDuration = Time.seconds(5);
 		return new TestCase(useCase, data);
 	}
+
+	public static String codeLocation()
+	{
+		StackTraceElement element = new Exception().getStackTrace()[1];
+		return element.getClassName() + "." + element.getMethodName();
+	}
 }

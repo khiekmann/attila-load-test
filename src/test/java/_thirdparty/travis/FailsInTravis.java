@@ -1,7 +1,9 @@
-package time;
+package _thirdparty.travis;
 
 import org.junit.Ignore;
 import org.junit.Test;
+
+import time.Time;
 
 import static org.junit.Assert.assertEquals;
 

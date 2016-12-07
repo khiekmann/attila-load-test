@@ -1,4 +1,4 @@
-package _development;
+package attila;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -9,9 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import _framework.TestHelper;
-import attila.AttilaMockWrapper;
-import attila.AttilaSendingCreate;
-import attila.AttilaUseCase;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import send.Sendable;

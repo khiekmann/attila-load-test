@@ -2,7 +2,7 @@ package useCase;
 
 import java.io.IOException;
 
-import _development.Eris;
+import _framework.TestHelper;
 import send.Sendable;
 
 
@@ -24,7 +24,7 @@ public class UseCaseExample implements UseCaseable
 	@Override
 	public void executeOnce() throws IOException
 	{
-		String message = Eris.codeLocation() +  ": Executes " + counter++ + " times.";
+		String message = TestHelper.codeLocation() +  ": Executes " + counter++ + " times.";
 		sender.send(message);
 	}
 

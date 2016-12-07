@@ -1,4 +1,4 @@
-package _development;
+package _thirdparty.wiremock;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by HiekmaHe on 16.11.2016.
  */
-public class MainTest
+public class _2_Original_Wiremock
 {
 	private static int port = 8080;
 	@ClassRule

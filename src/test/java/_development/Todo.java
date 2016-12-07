@@ -13,11 +13,5 @@ public class Todo
 {
 	@Ignore
 	@Test
-	public void testTimeUnit() {
-		fail("Use Javas Time Unit");
-	}
-
-	@Ignore
-	@Test
 	public void testFuture() {fail("Future in Executor");}
 }

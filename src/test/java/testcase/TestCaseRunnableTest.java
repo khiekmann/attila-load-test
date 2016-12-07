@@ -106,7 +106,7 @@ public class TestCaseRunnableTest
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertUpperBound() throws Exception {
 		// arrange
 		Time stopAfter = Time.seconds(2);
-		Time maxDuration = stopAfter.add(Time.millis(500));
+		Time maxDuration = stopAfter.add(Time.seconds(1));
 
 		// act
 		Time timestampStart = Time.now();
