@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Vector;
 
+import message.Message;
+
 
 /**
  * Created by HiekmaHe on 20.11.2016.
@@ -21,7 +23,7 @@ public class SendableTestHelper
 		return new Sendable()
 		{
 			@Override
-			public void send(String message) throws IOException
+			public void send(Message message) throws IOException
 			{
 				holdingExecutedMethodMessages.add(sendStringMessage);
 			}
@@ -39,7 +41,7 @@ public class SendableTestHelper
 		return new Sendable()
 		{
 			@Override
-			public void send(String message) throws IOException
+			public void send(Message message) throws IOException
 			{
 				holdingExecutedMethodMessages.add(sendStringMessage);
 			}

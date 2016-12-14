@@ -1,8 +1,0 @@
-
-TestCaseExecutor attilaRunner = new TestCaseExecutor(testCase);
-+---TestCase testCase = new TestCase(attilaUseCase, data);
-    +---UseCaseable attilaUseCase = new AttilaUseCase(List<String> messages, attilaSender);
-    |   +---Sendable attilaSender = new Sending(attilaConnectionCreate);
-    |       +---SendingCreate attilaConnectionCreate = AttilaConnectionCreate.createInstance(getURL());
-    +---DataForTestCase data = new DataForTestCase();
-

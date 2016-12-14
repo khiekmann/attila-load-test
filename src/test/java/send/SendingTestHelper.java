@@ -1,17 +1,15 @@
-package _development;
+package send;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
+import _framework.TestHelper;
 import attila.AttilaSendingCreate;
 import attila.AttilaUseCase;
-import send.Sendable;
-import send.Sending;
-import testcase.DataForTestCase;
-import testcase.TestCase;
-import testcase.TestCaseExecutor;
+import message.Messages;
+import testCase.DataForTestCase;
+import testCase.TestCase;
+import testCase.TestCaseExecutor;
 
 
 /**
@@ -21,25 +19,16 @@ public class SendingTestHelper
 {
 
 	private static int port = 8080;
-	private static String host = "http://localhost";
+	private static String host = "http://0.0.0.0";
 	private static String urlPath = "/cai/rtm/v1/d/";
 	private static TestCase testCase;
 	private static AttilaUseCase attilaUseCase;
 	private static DataForTestCase data;
-	private static List<String> messages;
-
-
-	public static List<String> createMessages() {
-		ArrayList<String> messages = new ArrayList<>();
-		messages.add("<?xml version=\"1.0\" encoding=\"UTF-8\" name=\"1\">");
-		messages.add("<?xml version=\"1.0\" encoding=\"UTF-8\" name=\"2\">");
-		messages.add("<?xml version=\"1.0\" encoding=\"UTF-8\" name=\"3\">");
-		return messages;
-	}
+	private static Messages messages;
 
 	public static TestCaseExecutor createRunner() throws IOException
 	{
-		messages = createMessages();
+		messages = TestHelper.createMessages();
 		URL url = new URL(host + ":" + port + urlPath);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
 		AttilaUseCase attilaUseCase = new AttilaUseCase(messages, sender);

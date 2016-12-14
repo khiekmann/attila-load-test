@@ -1,4 +1,4 @@
-package testcase;
+package testCase;
 
 import java.io.IOException;
 
@@ -38,7 +38,7 @@ public class TestCaseTest
 	public void before() throws IOException
 	{
 		rule.givenThat(mock.receivesAnyRequestThenReturn200TextplainContent());
-		testCase = TestHelper.createAttilaTestCase();
+		testCase = TestHelper.createTestCase();
 	}
 
 	@Test

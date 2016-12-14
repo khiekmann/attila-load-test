@@ -1,4 +1,4 @@
-package _development;
+package _thirdparty.javaversion;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -13,8 +13,8 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import send.Sendable;
 import send.Sending;
-import testcase.DataForTestCase;
-import testcase.TestCase;
+import testCase.DataForTestCase;
+import testCase.TestCase;
 import useCase.UseCaseExample;
 import useCase.UseCaseable;
 
@@ -30,7 +30,7 @@ public class ExecutorTestHelper
 {
 	private static WireMock wm = new WireMock();
 	private static int port = 8080;
-	private static String host = "http://localhost";
+	private static String host = "http://0.0.0.0";
 	private static String urlPath = "/cai/rtm/v1/d";
 
 	public static Runnable createRunnable1() throws IOException

@@ -37,7 +37,7 @@ public class UseCaseExampleTest
 	@Before
 	public void before() throws IOException
 	{
-		strUrl = "http://localhost:8080" + urlPath;
+		strUrl = "http://0.0.0.0:8080" + urlPath;
 		//createStubMapping();
 		useCaseExample = createUseCaseExample();
 	}

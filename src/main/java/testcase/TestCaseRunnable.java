@@ -1,4 +1,4 @@
-package testcase;
+package testCase;
 
 /**
  * Created by HiekmaHe on 15.11.2016.

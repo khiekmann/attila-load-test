@@ -1,4 +1,4 @@
-package _development;
+package send;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -7,7 +7,7 @@ import org.junit.Test;
 import _framework.TestHelper;
 import attila.AttilaMockWrapper;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import testcase.TestCaseRunnable;
+import testCase.TestCaseRunnable;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -27,7 +27,7 @@ public class SendingTest
 	public void before() throws Exception
 	{
 		rule.givenThat(mock.receivesAnyRequestThenReturn200TextplainContent());
-		runner = TestHelper.createAttilaRunner();
+		runner = TestHelper.createRunner();
 	}
 
 	@Test

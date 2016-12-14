@@ -3,6 +3,8 @@ package send;
 import java.io.IOException;
 import java.net.ConnectException;
 
+import message.Message;
+
 
 /**
  * Created by HiekmaHe on 16.11.2016.
@@ -14,13 +16,13 @@ public class Sending implements Sendable
 	private final SendingCreate creator;
 	private int responseCode;
 
-	public Sending(SendingCreate create) throws IOException
+	public Sending(SendingCreate create)
 	{
 		this.creator = create;
 	}
 
 	@Override
-	public void send(String message) throws IOException
+	public void send(Message message) throws IOException
 	{
 		try {
 			SendingCreate create = creator.create();

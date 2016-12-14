@@ -1,4 +1,4 @@
-package testcase;
+package testCase;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import _framework.TestHelper;
-import attila.AttilaMockWrapper;
+import _thirdparty.wiremock.MockWrapper;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import time.Time;
 
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotEquals;
 public class TestCaseRunnableTest
 {
 
-	private AttilaMockWrapper mock = new AttilaMockWrapper();
+	private MockWrapper mock = new MockWrapper("/c/r/v/d", null);
 	@Rule
 	public WireMockClassRule rule = mock.getWireMockClassRule();
 	private TestCaseRunnable runner;
@@ -31,7 +31,7 @@ public class TestCaseRunnableTest
 	public void before() throws IOException
 	{
 		rule.givenThat(mock.receivesAnyRequestThenReturn200TextplainContent());
-		runner = TestHelper.createAttilaRunner();
+		runner = TestHelper.createRunner();
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class TestCaseRunnableTest
 	public void runUseCaseFor2SecondsBecauseOfExternalStopCall_assertUpperBound() throws Exception {
 		// arrange
 		Time stopAfter = Time.seconds(2);
-		Time maxDuration = stopAfter.add(Time.millis(500));
+		Time maxDuration = stopAfter.add(Time.seconds(1));
 
 		// act
 		Time timestampStart = Time.now();

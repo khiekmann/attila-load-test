@@ -1,4 +1,4 @@
-package _development;
+package _thirdparty.wiremock;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -13,12 +13,13 @@ import org.junit.Test;
 
 import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import message.Message;
 import send.Sendable;
 import send.Sending;
-import testcase.DataForTestCase;
-import testcase.TestCase;
-import testcase.TestCaseExecutor;
-import testcase.TestCaseRunnable;
+import testCase.DataForTestCase;
+import testCase.TestCase;
+import testCase.TestCaseExecutor;
+import testCase.TestCaseRunnable;
 import time.Time;
 import useCase.UseCaseExample;
 import useCase.UseCaseable;
@@ -30,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by HiekmaHe on 16.11.2016.
  */
-public class MainTest
+public class _2_Original_Wiremock
 {
 	private static int port = 8080;
 	@ClassRule
@@ -61,11 +62,11 @@ public class MainTest
 	public void testPostRequestMethod() throws Exception
 	{
 		// arrange
-		URL url = new URL("http://localhost:" + 8080 + onlyPostUrlPath);
+		URL url = new URL("http://0.0.0.0:" + 8080 + onlyPostUrlPath);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
 
 		// act
-		sender.send("foo");
+		sender.send(new Message("foo"));
 
 		// assert
 		assertEquals(200, sender.getResponseCode());
@@ -79,7 +80,7 @@ public class MainTest
 		messages.add("A");
 		messages.add("B");
 		messages.add("C");
-		URL url = new URL("http://localhost" + port + urlPath);
+		URL url = new URL("http://0.0.0.0" + port + urlPath);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));

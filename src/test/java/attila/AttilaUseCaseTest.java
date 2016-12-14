@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import _framework.TestHelper;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 
 import static org.junit.Assert.assertEquals;
@@ -20,6 +19,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class AttilaUseCaseTest
 {
+
 	private AttilaMockWrapper mock = new AttilaMockWrapper();
 	@Rule	public WireMockClassRule rule = mock.getWireMockClassRule();
 	private AttilaUseCase useCase;
@@ -28,7 +28,7 @@ public class AttilaUseCaseTest
 	public void before() throws IOException
 	{
 		rule.givenThat(mock.receivesPostRequestWithContent_ThenReturn201());
-		useCase = TestHelper.createAttilaUseCase();
+		useCase = AttilaHelper.createAttilaUseCase();
 	}
 
 	@Test

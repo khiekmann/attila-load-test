@@ -1,4 +1,4 @@
-package testcase;
+package testCase;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -39,7 +39,7 @@ public class TestCaseExecutorTest
 	public static WireMockClassRule wireMockRule = new WireMockClassRule(port);
 	@Rule
 	public WireMockClassRule instanceRule = wireMockRule;
-	private String host = "http://localhost:";
+	private String host = "http://0.0.0.0:";
 	private static URL url;
 	private String urlPath = "/cai/rtm/v1/d";
 
@@ -57,7 +57,7 @@ public class TestCaseExecutorTest
 		messages.add("B");
 		messages.add("C");
 		String urlPath = "/somewhere";
-		URL url = new URL("http://localhost:" + port + urlPath);
+		URL url = new URL("http://0.0.0.0:" + port + urlPath);
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));

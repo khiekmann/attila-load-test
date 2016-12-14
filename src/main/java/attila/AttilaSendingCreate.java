@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.github.tomakehurst.wiremock.http.RequestMethod;
 import send.SendingCreate;
 
 
 /**
  * Created by HiekmaHe on 19.11.2016.
+ *
+ * SPR: Sending class for attila context
  */
 public class AttilaSendingCreate extends SendingCreate
 {
@@ -24,7 +27,7 @@ public class AttilaSendingCreate extends SendingCreate
 		HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
 		httpUrl.setDoOutput(true);
 		httpUrl.setConnectTimeout(0);
-		httpUrl.setRequestMethod("POST");
+		httpUrl.setRequestMethod(RequestMethod.POST.value());
 		return httpUrl;
 	}
 
