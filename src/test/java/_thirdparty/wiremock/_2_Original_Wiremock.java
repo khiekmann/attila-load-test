@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import attila.AttilaSendingCreate;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import message.Message;
 import send.Sendable;
 import send.Sending;
 import testCase.DataForTestCase;
@@ -65,7 +66,7 @@ public class _2_Original_Wiremock
 		Sendable sender = new Sending(AttilaSendingCreate.createInstance(url));
 
 		// act
-		sender.send("foo");
+		sender.send(new Message("foo"));
 
 		// assert
 		assertEquals(200, sender.getResponseCode());

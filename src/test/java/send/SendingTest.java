@@ -27,7 +27,7 @@ public class SendingTest
 	public void before() throws Exception
 	{
 		rule.givenThat(mock.receivesAnyRequestThenReturn200TextplainContent());
-		runner = TestHelper.createAttilaRunner();
+		runner = TestHelper.createRunner();
 	}
 
 	@Test

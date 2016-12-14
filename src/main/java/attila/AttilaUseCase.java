@@ -1,8 +1,9 @@
 package attila;
 
 import java.io.IOException;
-import java.util.List;
 
+import message.Message;
+import message.Messages;
 import send.Sendable;
 import useCase.UseCaseable;
 
@@ -13,11 +14,11 @@ import useCase.UseCaseable;
 public class AttilaUseCase implements UseCaseable
 {
 
-	private final List<String> messages;
+	private final Messages messages;
 	private final Sendable sender;
 	private int counter = 0;
 
-	public AttilaUseCase(List<String> messages, Sendable sender)
+	public AttilaUseCase(Messages messages, Sendable sender)
 	{
 		this.messages = messages;
 		this.sender = sender;
@@ -26,7 +27,7 @@ public class AttilaUseCase implements UseCaseable
 	@Override
 	public void executeOnce() throws IOException
 	{
-		sender.send(getMessage());
+		sender.send(nextMessage());
 	}
 
 	@Override
@@ -35,8 +36,8 @@ public class AttilaUseCase implements UseCaseable
 		return sender.getResponseCode();
 	}
 
-	private String getMessage()
+	private Message nextMessage()
 	{
-		return messages.get(counter++ % messages.size());
+		return messages.next();
 	}
 }

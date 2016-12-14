@@ -32,4 +32,9 @@ public class Message
 	public String toString() {
 		return content;
 	}
+
+	public byte[] getBytes()
+	{
+		return content.getBytes();
+	}
 }

@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import _framework.TestHelper;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import send.Sendable;
 import send.Sending;
@@ -40,10 +39,8 @@ public class AttilaTest
 		givenThat(mock.receivesPostRequestNoContent_ThenReturn406());
 		givenThat(mock.receivesGetRequest_ThenReturn406());
 
-		runner = TestHelper.createAttilaRunner();
+		runner = AttilaHelper.createAttilaRunner();
 	}
-
-
 
 	@Test
 	public void stopAfter2Seconds() throws Exception
@@ -69,7 +66,7 @@ public class AttilaTest
 		data.expectedDuration = Time.seconds(2);
 		SendingCreate attilaConnectionCreate = AttilaSendingCreate.createInstance(mock.createUrlExitOnException());
 		Sendable attilaSender = new Sending(attilaConnectionCreate);
-		UseCaseable useCase = new AttilaUseCase(TestHelper.getMessages(), attilaSender);
+		UseCaseable useCase = new AttilaUseCase(AttilaHelper.getMessages(), attilaSender);
 		TestCase testCase = new TestCase(useCase, data);
 		TestCaseRunnable runner = new TestCaseExecutor(testCase);
 

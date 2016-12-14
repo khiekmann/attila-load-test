@@ -2,6 +2,8 @@ package send;
 
 import java.io.IOException;
 
+import message.Message;
+
 
 /**
  * Created by HiekmaHe on 15.11.2016.
@@ -10,7 +12,7 @@ import java.io.IOException;
  */
 public interface Sendable
 {
-	void send(String message) throws IOException;
+	void send(Message message) throws IOException;
 
 	int getResponseCode();
 }

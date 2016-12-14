@@ -3,6 +3,7 @@ package useCase;
 import java.io.IOException;
 
 import _framework.TestHelper;
+import message.Message;
 import send.Sendable;
 
 
@@ -24,7 +25,7 @@ public class UseCaseExample implements UseCaseable
 	@Override
 	public void executeOnce() throws IOException
 	{
-		String message = TestHelper.codeLocation() +  ": Executes " + counter++ + " times.";
+		Message message = new Message(TestHelper.codeLocation() +  ": Executes " + counter++ + " times.");
 		sender.send(message);
 	}
 

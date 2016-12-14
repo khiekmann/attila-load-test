@@ -2,13 +2,12 @@ package attila;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Rule;
 
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import message.Messages;
 import send.Sendable;
 import send.Sending;
 import testCase.DataForTestCase;
@@ -33,7 +32,7 @@ public class MockSendingUsingAttilaUseCase
 	@Before
 	public void before() throws IOException
 	{
-		List<String> messages = new ArrayList<>();
+		Messages messages = AttilaHelper.getMessages();
 		URL attilaURL = mock.createUrlExitOnException();
 		AttilaSendingCreate creator = AttilaSendingCreate.createInstance(attilaURL);
 		Sendable sender = new Sending(creator);
@@ -42,5 +41,4 @@ public class MockSendingUsingAttilaUseCase
 		TestCase testCase = new TestCase(useCase, data);
 		runner = new TestCaseExecutor(testCase);
 	}
-
 }

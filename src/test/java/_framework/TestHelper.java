@@ -1,19 +1,22 @@
 package _framework;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-import attila.AttilaMockWrapper;
-import attila.AttilaSendingCreate;
-import attila.AttilaUseCase;
+import _thirdparty.wiremock.MockWrapper;
+import message.Message;
+import message.Messages;
 import send.Sendable;
 import send.Sending;
+import send.SendingCreate;
+import send.SendingCreateExample;
 import testCase.DataForTestCase;
 import testCase.TestCase;
 import testCase.TestCaseExecutor;
 import testCase.TestCaseRunnable;
 import time.Time;
+import useCase.UseCaseExample;
 import useCase.UseCaseable;
 
 
@@ -24,40 +27,54 @@ import useCase.UseCaseable;
  */
 public class TestHelper
 {
-	private static AttilaMockWrapper mock = new AttilaMockWrapper();
-
-	public static TestCaseRunnable createAttilaRunner() throws IOException
-	{
-		TestCase testCase = createAttilaTestCase();
-		return new TestCaseExecutor(testCase);
-	}
-
-	public static AttilaUseCase createAttilaUseCase() throws IOException
-	{
-		Sendable sender = new Sending(AttilaSendingCreate.createInstance(mock.createUrlExitOnException()));
-		return new AttilaUseCase(getMessages(), sender);
-	}
-
-	public static List<String> getMessages()
-	{
-		List<String> messages = new ArrayList<>();
-		messages.add("<?xml version=\"1.0\" type=\"A\" encoding=\"UTF-8\"?>");
-		messages.add("<?xml version=\"1.0\" type=\"B\" encoding=\"UTF-8\"?>");
-		messages.add("<?xml version=\"1.0\" type=\"C\" encoding=\"UTF-8\"?>");
-		return messages;
-	}
-
-	public static TestCase createAttilaTestCase() throws IOException
-	{
-		UseCaseable useCase = createAttilaUseCase();
-		DataForTestCase data = new DataForTestCase();
-		data.expectedDuration = Time.seconds(5);
-		return new TestCase(useCase, data);
-	}
+	private static MockWrapper mock = new MockWrapper("/c/r/v/d", null);
 
 	public static String codeLocation()
 	{
 		StackTraceElement element = new Exception().getStackTrace()[1];
 		return element.getClassName() + "." + element.getMethodName();
+	}
+
+	public static Messages createMessages()
+	{
+		Messages messages = new Messages();
+		Message message;
+		for (int i = 0; i < 10; i++) {
+			message = new Message("<?xml version=\"1.0\" encoding=\"UTF-8\" name=\"" + i + "\">");
+			messages.add(message);
+		}
+		return messages;
+	}
+
+	public static TestCase createTestCase()
+	{
+		URL url = mock.createUrlExitOnException();
+		HttpURLConnection httpUrl = createHttpUrlConnection(url);
+		SendingCreate creator = new SendingCreateExample(httpUrl);
+		Sendable sender = new Sending(creator);
+		UseCaseable useCase = new UseCaseExample(sender);
+		DataForTestCase data = new DataForTestCase();
+		data.expectedDuration = Time.seconds(5);
+		return new TestCase(useCase, data);
+	}
+
+	private static HttpURLConnection createHttpUrlConnection(URL url)
+	{
+		HttpURLConnection httpUrl;
+		try {
+			httpUrl = (HttpURLConnection) url.openConnection();
+			httpUrl.setDoOutput(true);
+			httpUrl.setDoInput(true);
+		}
+		catch (IOException e)
+		{
+			httpUrl = null;
+		}
+		return httpUrl;
+	}
+
+	public static TestCaseRunnable createRunner()
+	{
+		return new TestCaseExecutor(createTestCase());
 	}
 }
